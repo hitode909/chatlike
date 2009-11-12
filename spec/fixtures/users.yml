@@ -4,3 +4,6 @@ a:
 b:
   name: user_b
   password: barvar
+c:
+  name: user_c
+  password: brah

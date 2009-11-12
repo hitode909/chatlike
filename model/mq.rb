@@ -16,6 +16,7 @@ module MessageQueue
       String :random_key, :unique => true
     end
     one_to_many :channels
+    one_to_many :sessions
     create_table unless table_exists?
 
     def before_create
