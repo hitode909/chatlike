@@ -9,7 +9,6 @@ describe MessageQueue::Session do
     @session_a_2 = load("message_queue/session__a_2")
     @session_b = load("message_queue/session__b")
     @user_a = load("message_queue/user__a")
-    @ch_jp = load("message_queue/channel__japan")
     @session_a_ch_jp = load("message_queue/session__a_ch_jp")
   end
 
@@ -22,6 +21,7 @@ describe MessageQueue::Session do
   end
 
   it 'may has a channel' do
+    @ch_jp = load("message_queue/channel__japan")
     @session_a.channel.should be_nil
     @session_a_ch_jp.channel.should == @ch_jp
   end
@@ -66,5 +66,16 @@ describe MessageQueue::Session do
 
     @session_a.check_alive
     @session_a.is_alive.should be_false
+  end
+
+  it 'has relation to channnel.sessions' do
+    load("message_queue/session")
+    @ch_jp = load("message_queue/channel__japan")
+    before = @ch_jp.sessions
+    @session_a_ch_jp.kill
+
+    @ch_jp.refresh
+    @ch_jp.sessions.length.should < before.length
+    @ch_jp.all_sessions.length.should == before.length
   end
 end

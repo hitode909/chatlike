@@ -5,6 +5,7 @@ require File.dirname(__FILE__) + '/../model_helper'
 describe MessageQueue::Channel do
   include MessageQueue
   before do
+    load("message_queue/session")
     @ch_jp = load("message_queue/channel__japan")
     @ch_eu = load("message_queue/channel__euro")
     @session_a_ch_jp = load("message_queue/session__a_ch_jp")
