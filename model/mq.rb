@@ -44,7 +44,8 @@ module MessageQueue
       foreign_key :user_id, :null => false
       foreign_key :channel_id
       time :created_at
-      time :modified_at
+      time :expire_at
+      TrueClass :is_alive, :default => true
     end
     many_to_one :user
     many_to_one :channel
@@ -52,11 +53,29 @@ module MessageQueue
 
     def before_create
       self.created_at = Time.now
+      self.expire_at  = Time.now + self.expire_duration
       self.random_key = SecureRandom.hex(32)
     end
 
-    def before_save
-      self.modified_at = Time.now
+    def update_expire
+      self.expire_at = Time.now + self.expire_duration
+    end
+
+    def expire_duration
+      600
+    end
+
+    def check_alive
+      self.still_alive or self.kill
+    end
+
+    def still_alive
+      self.is_alive and self.expire_at > Time.now
+    end
+
+    def kill
+      self.is_alive = false
+      self.save
     end
   end
 end

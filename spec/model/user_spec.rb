@@ -6,6 +6,7 @@ describe MessageQueue::User do
   include MessageQueue
   before do
     load("message_queue/session")
+
     @user_a = load("message_queue/user__a")
     @user_b = load("message_queue/user__b")
     @user_c = load("message_queue/user__c")

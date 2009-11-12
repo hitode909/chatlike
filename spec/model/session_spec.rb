@@ -33,5 +33,38 @@ describe MessageQueue::Session do
    it 'tokens will differ' do
      @session_a.random_key.should_not == @session_b.random_key
      @session_a.random_key.should_not == @session_a_2.random_key
-   end
+  end
+
+  it 'has expire' do
+    @now = Time.now
+    Time.stub!(:now).and_return @now
+
+    @session_a.is_alive.should be_true
+
+    @now += @session_a.expire_duration * 2
+    Time.stub!(:now).and_return @now
+
+    @session_a.still_alive.should be_false
+  end
+
+  it 'will die when killed' do
+    @session_a.is_alive.should be_true
+    @session_a.kill
+    @session_a.is_alive.should be_false
+  end
+
+  it 'will die when expired' do
+    @now = Time.now
+    @session_a.is_alive.should be_true
+
+    Time.stub!(:now).and_return @now
+
+    @session_a.check_alive
+    @session_a.is_alive.should be_true
+
+    Time.stub!(:now).and_return @now + @session_a.expire_duration * 2
+
+    @session_a.check_alive
+    @session_a.is_alive.should be_false
+  end
 end
