@@ -78,4 +78,14 @@ describe MessageQueue::Session do
     @ch_jp.sessions.length.should < before.length
     @ch_jp.all_sessions.length.should == before.length
   end
+
+  it 'has relation to user.sessions' do
+    load("message_queue/session")
+    before = @user_a.sessions
+    @session_a_ch_jp.kill
+
+    @user_a.refresh
+    @user_a.sessions.length.should < before.length
+    @user_a.all_sessions.length.should == before.length
+  end
 end
