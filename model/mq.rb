@@ -2,10 +2,23 @@ require 'digest/sha1'
 require 'securerandom'
 
 module MessageQueue
-  def self.register name, password
-  end
+  class << self
+    def register name, password
+      'j'
+    end
 
-  def self.login user, password
+    def login name, password
+      'j'
+    end
+
+    def logout name, password
+    end
+
+    def get
+    end
+
+    def post
+    end
   end
 
   class User < Sequel::Model
