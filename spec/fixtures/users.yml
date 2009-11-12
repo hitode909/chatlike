@@ -1,0 +1,6 @@
+a:
+  name: user_a
+  password: foobar
+b:
+  name: user_b
+  password: barvar
