@@ -7,6 +7,9 @@ b:
 a_ch_jp:
   user: a
   channel: japan
+a_ch_jp_2:
+  user: a
+  channel: japan
 b_ch_jp:
   user: b
   channel: japan
