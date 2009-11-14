@@ -8,19 +8,21 @@ describe MainController do
 
   before do
     delete_test_db
+    Messager.register('a', 'a')
+    Messager.register('b', 'b')
   end
 
   should 'can register' do
-    post('/api/register', :name => 'a', :password => 'a')
+    post('/api/register', :name => 'newa', :password => 'newa')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["data"].length.should > 32
   end
 
   should 'cannot register dupricate user' do
-    post('/api/register', :name => 'b', :password => 'b')
+    post('/api/register', :name => 'newb', :password => 'newb')
     json(last_response.body)["status"].should == "ok"
-    post('/api/register', :name => 'b', :password => 'b')
+    post('/api/register', :name => 'newb', :password => 'newb')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
     json(last_response.body)["error"].should.include("DupricateUser")
@@ -67,4 +69,31 @@ describe MainController do
     json(last_response.body)["status"].should == "ng"
     json(last_response.body)["error"].should.include("SessionRequired")
   end
+
+  should 'can get message' do
+    post('/api/login', :name => 'a', :password => 'a')
+    token_a = json(last_response.body)["data"]
+
+    post('/api/login', :name => 'b', :password => 'b')
+    token_b = json(last_response.body)["data"]
+
+    post('/api/post', :body => "hello", :session => token_a)
+    post('/api/post', :body => "world", :session => token_a)
+
+    get('/api/get', :session => token_b)
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].should == "hello"
+
+    get('/api/get', :session => token_b)
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].should == "world"
+
+    get('/api/get', :session => token_b)
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].should == ""
+  end
+
 end

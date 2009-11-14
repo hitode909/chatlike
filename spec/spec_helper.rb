@@ -3,10 +3,10 @@ $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'json'
 
 def delete_test_db
-  db = File.dirname(__FILE__) + '/../test.db'
-  if File.exist?(db)
-    File.delete(db)
-  end
+  Messager::Session.delete
+  Messager::User.delete
+  Messager::Message.delete
+  Messager::Channel.delete
 end
 
 def json(str)
@@ -14,4 +14,3 @@ def json(str)
 end
 
 DB_ENV = 'test'
-delete_test_db

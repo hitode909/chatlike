@@ -27,14 +27,17 @@ class ApiController < JsonController
   end
 
   def get
-    return unless request[:key] and Session.check request[:key]
-    sleep 3
-    MessageQueue.get(request[:key])
+    return unless request.get? and check_session
+    m = @session.receive_message
+    m ? m.body : ""
+  rescue => e
+    raised_error(e)
   end
 
   def post
     return unless request.post? and check_session and check_request(:body)
-    @session.create_message(:body)
+    @session.create_message(request[:body])
+    ""
   rescue => e
     raised_error(e)
   end

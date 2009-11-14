@@ -63,6 +63,7 @@ module Messager
       m = query.first
       if m
         self.last_fetched = m.id
+        self.save
       end
       m
     end
