@@ -98,7 +98,7 @@ module MessageQueue
       time :created_at
       time :expire_at
       Integer :last_fetched, :null => false, :default => 0
-      TrueClass :is_alive, :default => true
+      Boolean :is_alive, :default => true
     end
     many_to_one :user
     many_to_one :channel
