@@ -10,11 +10,20 @@ class ApiController < JsonController
     return unless request.post? and request[:name] and request[:password]
     begin
       session = Messager.register(request[:name], request[:password])
-    rescue(Messager::DupricateUser)
-      error("dupricate user name")
-    else
-      session.random_key
+    rescue(Messager::DupricateUser) => e
+      return raised_error(e)
     end
+    session.random_key
+  end
+
+  def login
+    return unless request.post? and request[:name] and request[:password]
+    begin
+      session = Messager.login(request[:name], request[:password])
+    rescue(Messager::UserNotFound) => e
+      return raised_error(e)
+    end
+    session.random_key
   end
 
   def get

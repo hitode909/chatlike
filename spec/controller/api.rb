@@ -13,16 +13,30 @@ describe MainController do
   should 'can register' do
     post('/api/register', :name => 'a', :password => 'b')
     last_response.status.should == 200
-    d = json(last_response.body)
-    d["status"].should == 'ok'
-    d["data"].length == 32
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].length.should > 32
   end
 
   should 'cannot register dupricate user' do
     post('/api/register', :name => 'b', :password => 'b')
     json(last_response.body)["status"].should == "ok"
     post('/api/register', :name => 'b', :password => 'b')
+    last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
-    json(last_response.body)["error"].should.include("dupricate user name")
+    json(last_response.body)["error"].should.include("DupricateUser")
+  end
+
+  should 'can login' do
+    post('/api/login', :name => 'a', :password => 'b')
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].length.should > 32
+  end
+
+  should 'cannot login with invalid user' do
+    post('/api/login', :name => 'a', :password => 'foobar')
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ng"
+    json(last_response.body)["error"].should.include("UserNotFound")
   end
 end
