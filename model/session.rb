@@ -44,7 +44,7 @@ module Messager
       self.save
     end
 
-    def create_message(body, option = { })
+    def post_message(body, option = { })
       option.update(
         :body => body,
         :author => self.user,

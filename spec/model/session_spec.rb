@@ -93,7 +93,7 @@ describe Messager::Session do
   end
 
   it 'posts messages' do
-    m = @session_a.create_message 'm1'
+    m = @session_a.post_message 'm1'
     m.should be_an_instance_of Messager::Message
     m.body.should == 'm1'
     m.author.should == @session_a.user
@@ -104,7 +104,7 @@ describe Messager::Session do
 
   it 'receive broadcast messages' do
     @session_b.receive_message.should be_nil
-    @session_a.create_message 'm'
+    @session_a.post_message 'm'
     m = @session_b.receive_message
     m.should be_an_instance_of Messager::Message
     m.body.should == 'm'
@@ -112,19 +112,19 @@ describe Messager::Session do
   end
 
   it 'receive messages in order' do
-    (1..5).each { |i| @session_a.create_message i }
+    (1..5).each { |i| @session_a.post_message i }
     Array.new(5){ @session_b.receive_message }.map{ |m| m.body}.should == (1..5).to_a.map{ |i| i.to_s }
   end
 
   it 'receive messages to user' do
-    @session_a.create_message 'to_b', :receiver => @user_b
+    @session_a.post_message 'to_b', :receiver => @user_b
     @session_b.receive_message.body.should == 'to_b'
     @session_a.receive_message.should be_nil
     @session_c.receive_message.should be_nil
   end
 
   it 'receive messages to channel' do
-    @session_a.create_message 'to_jp', :channel => load("messager/channel__japan")
+    @session_a.post_message 'to_jp', :channel => load("messager/channel__japan")
     @session_b_ch_jp = load("messager/session__b_ch_jp")
     @session_b_ch_jp.receive_message.body.should == 'to_jp'
     @session_c_ch_jp = load("messager/session__c_ch_jp")
@@ -134,7 +134,7 @@ describe Messager::Session do
   end
 
   it 'receive messages to channel in the user' do
-    @session_a.create_message('to_b_jp',
+    @session_a.post_message('to_b_jp',
       :receiver => @user_b,
       :channel => load("messager/channel__japan")
       )
@@ -146,7 +146,7 @@ describe Messager::Session do
   end
 
   it 'receives my message when loopback' do
-    @session_a.create_message 'broadcast loopback', :loopback => true
+    @session_a.post_message 'broadcast loopback', :loopback => true
     @session_b.receive_message.body.should == 'broadcast loopback'
     @session_a.receive_message.body.should == 'broadcast loopback'
   end

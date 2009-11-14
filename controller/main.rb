@@ -36,7 +36,7 @@ class ApiController < JsonController
 
   def post
     return unless request.post? and check_session and check_request(:body)
-    @session.create_message(request[:body])
+    @session.post_message(request[:body])
     ""
   rescue => e
     raised_error(e)
