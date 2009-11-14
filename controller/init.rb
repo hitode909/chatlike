@@ -13,11 +13,18 @@ class JsonController < Controller
     unless s.respond_to? :to_hash
       s = {
         :data => s,
-        :status => "ok"
       }
     end
+    s[:status] = "ok" unless s.has_key? :status
     s.to_hash.to_json
   }
+
+  private
+  def error(*messages)
+    { :status => "ng",
+      :error => messages
+    }
+  end
 end
 
 

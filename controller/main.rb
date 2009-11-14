@@ -5,17 +5,18 @@ class MainController < Controller
   end
 end
 
-module Api
-  class LoginController < JsonController
-    def controller
-      return unless request.post? and request[:name] and request[:password]
-      Session.join request[:name], request[:password]
+class ApiController < JsonController
+  def register
+    return unless request.post? and request[:name] and request[:password]
+    begin
+      session = Messager.register(request[:name], request[:password])
+    rescue(Messager::DupricateUser)
+      error("dupricate user name")
+    else
+      session.random_key
     end
   end
 
-end
-
-class ApiController < JsonController
   def get
     return unless request[:key] and Session.check request[:key]
     sleep 3

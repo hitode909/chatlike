@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-DB_ENV = 'test'
 require 'model/init'
 require 'fixture_dependencies'
 require 'fixture_dependencies/rspec/sequel'
