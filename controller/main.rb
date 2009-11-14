@@ -33,7 +33,9 @@ class ApiController < JsonController
   end
 
   def post
-    "posted #{request[:data]}"
-    MessageQueue.post(request[:key], request[:data])
+    return unless request.post? and check_session and check_request(:body)
+    @session.create_message(:body)
+  rescue => e
+    raised_error(e)
   end
 end

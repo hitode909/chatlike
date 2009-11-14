@@ -11,7 +11,7 @@ describe MainController do
   end
 
   should 'can register' do
-    post('/api/register', :name => 'a', :password => 'b')
+    post('/api/register', :name => 'a', :password => 'a')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["data"].length.should > 32
@@ -27,7 +27,7 @@ describe MainController do
   end
 
   should 'can login' do
-    post('/api/login', :name => 'a', :password => 'b')
+    post('/api/login', :name => 'a', :password => 'a')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["data"].length.should > 32
@@ -38,5 +38,33 @@ describe MainController do
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
     json(last_response.body)["error"].should.include("UserNotFound")
+  end
+
+  # XXX: channel
+
+  should 'can post message' do
+    post('/api/login', :name => 'a', :password => 'a')
+    token = json(last_response.body)["data"]
+
+    post('/api/post', :session => token, :body => 'hello')
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+  end
+
+  should 'cannot post without body' do
+    post('/api/login', :name => 'a', :password => 'a')
+    token = json(last_response.body)["data"]
+
+    post('/api/post', :session => token)
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ng"
+    json(last_response.body)["error"].should.include("BodyRequired")
+  end
+
+  should 'cannot post without session' do
+    post('/api/post', :body => "cool")
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ng"
+    json(last_response.body)["error"].should.include("SessionRequired")
   end
 end

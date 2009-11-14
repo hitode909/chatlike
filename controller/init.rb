@@ -1,5 +1,4 @@
-# Define a subclass of Ramaze::Controller holding your defaults for all
-# controllers
+require 'sequel/extensions/inflector'
 
 class Controller < Ramaze::Controller
   layout :default
@@ -20,9 +19,21 @@ class JsonController < Controller
   }
 
   private
+
+  def check_request(key)
+    raise "#{key.to_s.camelize}Required" unless request[key]
+    true
+  end
+
+  def check_session
+    raise "SessionRequired" unless request[:session]
+    @session = Messager.session(request[:session])
+    raise "InvalidSession" unless @session
+    true
+  end
   def raised_error(*errors)
     { :status => "ng",
-      :error => errors.map{ |e| e.to_s.split("::").last}
+      :error => errors.map{ |e| e.message.split("::").last}
     }
   end
 
