@@ -53,6 +53,26 @@ module Messager
       Message.create(option)
     end
 
+    def post_message_to_channel(body, option = { })
+      option.update(
+        :body => body,
+        :author => self.user,
+        :author_session => self,
+        :channel => self.channel
+      )
+      Message.create(option)
+    end
+
+    def post_message_to_me(body, option = { })
+      option.update(
+        :body => body,
+        :author => self.user,
+        :author_session => self,
+        :receiver => self.user
+      )
+      Message.create(option)
+    end
+
     def receive_message
       query = Messager::Message.filter(:channel_id => self.channel_id, :receiver_id => self.user_id)
       query.or!(:channel_id => self.channel_id, :receiver_id => nil) if self.channel_id

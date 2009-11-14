@@ -102,6 +102,23 @@ describe Messager::Session do
     m.receiver.should be_nil
   end
 
+  it 'post message to channel' do
+    @ch_jp = load("messager/channel__japan")
+    m = @session_a_ch_jp.post_message_to_channel 'jp'
+    m.should be_an_instance_of Messager::Message
+    m.body.should == 'jp'
+    m.channel.should == @ch_jp
+    m.receiver.should be_nil
+  end
+
+  it 'post message to me' do
+    m = @session_a.post_message_to_me 'me'
+    m.should be_an_instance_of Messager::Message
+    m.body.should == 'me'
+    m.channel.should == nil
+    m.receiver.should == @session_a.user
+  end
+
   it 'receive broadcast messages' do
     @session_b.receive_message.should be_nil
     @session_a.post_message 'm'
