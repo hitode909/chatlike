@@ -134,7 +134,6 @@ describe MessageQueue::Session do
   end
 
   it 'receive messages to channel in the user' do
-    @user_b
     @session_a.create_message('to_b_jp',
       :receiver => @user_b,
       :channel => load("message_queue/channel__japan")
