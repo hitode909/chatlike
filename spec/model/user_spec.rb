@@ -47,4 +47,5 @@ describe MessageQueue::User do
     s = @user_a.create_session('ping-pong')
     s.channel.name.should == 'ping-pong'
   end
+
 end

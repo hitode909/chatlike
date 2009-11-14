@@ -9,6 +9,9 @@ describe MessageQueue::Session do
     @session_a_2 = load("message_queue/session__a_2")
     @session_b = load("message_queue/session__b")
     @user_a = load("message_queue/user__a")
+    @user_b = load("message_queue/user__b")
+    @user_c = load("message_queue/user__c")
+    @session_c = load("message_queue/session__c")
     @session_a_ch_jp = load("message_queue/session__a_ch_jp")
   end
 
@@ -87,5 +90,59 @@ describe MessageQueue::Session do
     @user_a.refresh
     @user_a.sessions.length.should < before.length
     @user_a.all_sessions.length.should == before.length
+  end
+
+  it 'posts messages' do
+    m = @session_a.create_message 'm1'
+    m.should be_an_instance_of MessageQueue::Message
+    m.body.should == 'm1'
+    m.author.should == @session_a.user
+    m.author_session.should == @session_a
+    m.channel.should be_nil
+    m.receiver.should be_nil
+  end
+
+  it 'receive broadcast messages' do
+    @session_b.receive_message.should be_nil
+    @session_a.create_message 'm'
+    m = @session_b.receive_message
+    m.should be_an_instance_of MessageQueue::Message
+    m.body.should == 'm'
+    @session_a.receive_message.should be_nil
+  end
+
+  it 'receive messages in order' do
+    (1..5).each { |i| @session_a.create_message i }
+    Array.new(5){ @session_b.receive_message }.map{ |m| m.body}.should == (1..5).to_a.map{ |i| i.to_s }
+  end
+
+  it 'receive messages to user' do
+    @session_a.create_message 'to_b', :receiver => @user_b
+    @session_b.receive_message.body.should == 'to_b'
+    @session_a.receive_message.should be_nil
+    @session_c.receive_message.should be_nil
+  end
+
+  it 'receive messages to channel' do
+    @session_a.create_message 'to_jp', :channel => load("message_queue/channel__japan")
+    @session_b_ch_jp = load("message_queue/session__b_ch_jp")
+    @session_b_ch_jp.receive_message.body.should == 'to_jp'
+    @session_c_ch_jp = load("message_queue/session__c_ch_jp")
+    @session_c_ch_jp.receive_message.body.should == 'to_jp'
+    @session_b.receive_message.should be_nil
+    @session_c.receive_message.should be_nil
+  end
+
+  it 'receive messages to channel in the user' do
+    @user_b
+    @session_a.create_message('to_b_jp',
+      :receiver => @user_b,
+      :channel => load("message_queue/channel__japan")
+      )
+    @session_b_ch_jp = load("message_queue/session__b_ch_jp")
+    @session_b_ch_jp.receive_message.body.should == 'to_b_jp'
+    @session_b.receive_message.should be_nil
+    @session_c_ch_jp = load("message_queue/session__c_ch_jp")
+    @session_c_ch_jp.receive_message.should be_nil
   end
 end

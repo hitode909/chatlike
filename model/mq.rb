@@ -65,6 +65,7 @@ module MessageQueue
       end
       Session.create(:user => self, :channel => channel)
     end
+
   end
 
   class Channel < Sequel::Model
@@ -96,6 +97,7 @@ module MessageQueue
       foreign_key :channel_id
       time :created_at
       time :expire_at
+      Integer :last_fetched, :null => false, :default => 0
       TrueClass :is_alive, :default => true
     end
     many_to_one :user
@@ -128,6 +130,28 @@ module MessageQueue
       self.is_alive = false
       self.save
     end
+
+    def create_message(body, option = { })
+      option.update(
+        :body => body,
+        :author => self.user,
+        :author_session => self
+      )
+      Message.create(option)
+    end
+
+    def receive_message
+      query = MessageQueue::Message.filter(:channel_id => self.channel_id, :receiver_id => self.user_id)
+      query.or!(:channel_id => self.channel_id, :receiver_id => nil) if self.channel_id
+      query.or!(:channel_id => nil, :receiver_id => nil)
+      query.filter!((:id > self.last_fetched) & ~{:author_session_id => self.id}).order!(:id.asc)
+      m = query.first
+      if m
+        self.last_fetched = m.id
+      end
+      m
+    end
+
   end
 
   class Message < Sequel::Model

@@ -4,6 +4,8 @@ a_2:
   user: a
 b:
   user: b
+c:
+  user: c
 a_ch_jp:
   user: a
   channel: japan
@@ -12,4 +14,7 @@ a_ch_jp_2:
   channel: japan
 b_ch_jp:
   user: b
+  channel: japan
+c_ch_jp:
+  user: c
   channel: japan
