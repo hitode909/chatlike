@@ -1,0 +1,14 @@
+broadcast:
+  author: a
+  author_session: a
+  body: broadcast
+to_user_b:
+  author: a
+  author_session: a
+  receiver: b
+  body: user
+to_channel_japan:
+  author: a
+  author_session: a
+  channel: japan
+  body: channel
