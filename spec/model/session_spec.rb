@@ -144,4 +144,10 @@ describe MessageQueue::Session do
     @session_c_ch_jp = load("message_queue/session__c_ch_jp")
     @session_c_ch_jp.receive_message.should be_nil
   end
+
+  it 'receives my message when loopback' do
+    @session_a.create_message 'broadcast loopback', :loopback => true
+    @session_b.receive_message.body.should == 'broadcast loopback'
+    @session_a.receive_message.body.should == 'broadcast loopback'
+  end
 end

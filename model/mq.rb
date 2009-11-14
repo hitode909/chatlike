@@ -143,8 +143,7 @@ module MessageQueue
     def receive_message
       query = MessageQueue::Message.filter(:channel_id => self.channel_id, :receiver_id => self.user_id)
       query.or!(:channel_id => self.channel_id, :receiver_id => nil) if self.channel_id
-      query.or!(:channel_id => nil, :receiver_id => nil)
-      query.filter!((:id > self.last_fetched) & ~{:author_session_id => self.id}).order!(:id.asc)
+      query.or!(:channel_id => nil, :receiver_id => nil).filter!(:id > self.last_fetched).filter!({:loopback => true} | ({:loopback => false} & ~{:author_session_id => self.id})).order!(:id.asc)
       m = query.first
       if m
         self.last_fetched = m.id
@@ -162,6 +161,7 @@ module MessageQueue
       foreign_key :author_session_id, :null => false
       foreign_key :receiver_id
       foreign_key :channel_id
+      Boolean :loopback, :null => false, :default => false
       time :created_at
     end
     many_to_one :author, :class => User
