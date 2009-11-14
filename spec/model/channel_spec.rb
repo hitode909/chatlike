@@ -24,14 +24,14 @@ describe MessageQueue::Channel do
 
   it 'may has sessions' do
     @ch_eu.sessions.should be_empty
-    @ch_jp.sessions.length.should == 3
+    @ch_jp.sessions.length.should > 0
     @ch_jp.sessions.should include @session_a_ch_jp
     @ch_jp.sessions.should include @session_b_ch_jp
   end
 
   it 'may has users' do
     @ch_eu.users.should be_empty
-    @ch_jp.users.length.should == 2
+    @ch_jp.users.length.should > 0
     @ch_jp.users.should include @user_a
     @ch_jp.users.should include @user_b
   end
