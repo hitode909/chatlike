@@ -2,21 +2,21 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/../model_helper'
 
-describe MessageQueue::Session do
-  include MessageQueue
+describe Messager::Session do
+  include Messager
   before do
-    @session_a = load("message_queue/session__a")
-    @session_a_2 = load("message_queue/session__a_2")
-    @session_b = load("message_queue/session__b")
-    @user_a = load("message_queue/user__a")
-    @user_b = load("message_queue/user__b")
-    @user_c = load("message_queue/user__c")
-    @session_c = load("message_queue/session__c")
-    @session_a_ch_jp = load("message_queue/session__a_ch_jp")
+    @session_a = load("messager/session__a")
+    @session_a_2 = load("messager/session__a_2")
+    @session_b = load("messager/session__b")
+    @user_a = load("messager/user__a")
+    @user_b = load("messager/user__b")
+    @user_c = load("messager/user__c")
+    @session_c = load("messager/session__c")
+    @session_a_ch_jp = load("messager/session__a_ch_jp")
   end
 
   it 'has session class' do
-    @session_a.should be_an_instance_of MessageQueue::Session
+    @session_a.should be_an_instance_of Messager::Session
   end
 
   it 'has a user' do
@@ -24,7 +24,7 @@ describe MessageQueue::Session do
   end
 
   it 'may has a channel' do
-    @ch_jp = load("message_queue/channel__japan")
+    @ch_jp = load("messager/channel__japan")
     @session_a.channel.should be_nil
     @session_a_ch_jp.channel.should == @ch_jp
   end
@@ -72,8 +72,8 @@ describe MessageQueue::Session do
   end
 
   it 'has relation to channnel.sessions' do
-    load("message_queue/session")
-    @ch_jp = load("message_queue/channel__japan")
+    load("messager/session")
+    @ch_jp = load("messager/channel__japan")
     before = @ch_jp.sessions
     @session_a_ch_jp.kill
 
@@ -83,7 +83,7 @@ describe MessageQueue::Session do
   end
 
   it 'has relation to user.sessions' do
-    load("message_queue/session")
+    load("messager/session")
     before = @user_a.sessions
     @session_a_ch_jp.kill
 
@@ -94,7 +94,7 @@ describe MessageQueue::Session do
 
   it 'posts messages' do
     m = @session_a.create_message 'm1'
-    m.should be_an_instance_of MessageQueue::Message
+    m.should be_an_instance_of Messager::Message
     m.body.should == 'm1'
     m.author.should == @session_a.user
     m.author_session.should == @session_a
@@ -106,7 +106,7 @@ describe MessageQueue::Session do
     @session_b.receive_message.should be_nil
     @session_a.create_message 'm'
     m = @session_b.receive_message
-    m.should be_an_instance_of MessageQueue::Message
+    m.should be_an_instance_of Messager::Message
     m.body.should == 'm'
     @session_a.receive_message.should be_nil
   end
@@ -124,10 +124,10 @@ describe MessageQueue::Session do
   end
 
   it 'receive messages to channel' do
-    @session_a.create_message 'to_jp', :channel => load("message_queue/channel__japan")
-    @session_b_ch_jp = load("message_queue/session__b_ch_jp")
+    @session_a.create_message 'to_jp', :channel => load("messager/channel__japan")
+    @session_b_ch_jp = load("messager/session__b_ch_jp")
     @session_b_ch_jp.receive_message.body.should == 'to_jp'
-    @session_c_ch_jp = load("message_queue/session__c_ch_jp")
+    @session_c_ch_jp = load("messager/session__c_ch_jp")
     @session_c_ch_jp.receive_message.body.should == 'to_jp'
     @session_b.receive_message.should be_nil
     @session_c.receive_message.should be_nil
@@ -136,12 +136,12 @@ describe MessageQueue::Session do
   it 'receive messages to channel in the user' do
     @session_a.create_message('to_b_jp',
       :receiver => @user_b,
-      :channel => load("message_queue/channel__japan")
+      :channel => load("messager/channel__japan")
       )
-    @session_b_ch_jp = load("message_queue/session__b_ch_jp")
+    @session_b_ch_jp = load("messager/session__b_ch_jp")
     @session_b_ch_jp.receive_message.body.should == 'to_b_jp'
     @session_b.receive_message.should be_nil
-    @session_c_ch_jp = load("message_queue/session__c_ch_jp")
+    @session_c_ch_jp = load("messager/session__c_ch_jp")
     @session_c_ch_jp.receive_message.should be_nil
   end
 

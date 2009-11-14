@@ -1,6 +1,6 @@
 require 'securerandom'
 
-module MessageQueue
+module Messager
   class DupricateUser < Exception;end
   class UserNotFound < Exception;end
   class User < Sequel::Model

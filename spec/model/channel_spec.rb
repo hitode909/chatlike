@@ -2,20 +2,20 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/../model_helper'
 
-describe MessageQueue::Channel do
-  include MessageQueue
+describe Messager::Channel do
+  include Messager
   before do
-    load("message_queue/session")
-    @ch_jp = load("message_queue/channel__japan")
-    @ch_eu = load("message_queue/channel__euro")
-    @session_a_ch_jp = load("message_queue/session__a_ch_jp")
-    @session_b_ch_jp = load("message_queue/session__b_ch_jp")
-    @user_a = load("message_queue/user__a")
-    @user_b = load("message_queue/user__b")
+    load("messager/session")
+    @ch_jp = load("messager/channel__japan")
+    @ch_eu = load("messager/channel__euro")
+    @session_a_ch_jp = load("messager/session__a_ch_jp")
+    @session_b_ch_jp = load("messager/session__b_ch_jp")
+    @user_a = load("messager/user__a")
+    @user_b = load("messager/user__b")
   end
 
   it 'has user class' do
-    @ch_jp.should be_an_instance_of MessageQueue::Channel
+    @ch_jp.should be_an_instance_of Messager::Channel
   end
 
   it 'has columns' do

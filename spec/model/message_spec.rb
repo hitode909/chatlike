@@ -2,16 +2,16 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/../model_helper'
 
-describe MessageQueue::Message do
+describe Messager::Message do
   before do
-    @user_a = load("message_queue/user__a")
-    @session_a = load("message_queue/session__a")
-    @m_br, @m_us, @m_ch = * load(%w{ message_queue/message__broadcast message_queue/message__to_user_b message_queue/message__to_channel_japan})
+    @user_a = load("messager/user__a")
+    @session_a = load("messager/session__a")
+    @m_br, @m_us, @m_ch = * load(%w{ messager/message__broadcast messager/message__to_user_b messager/message__to_channel_japan})
   end
 
   it 'has user class' do
-    @m_br.should be_an_instance_of MessageQueue::Message
-    @user_a = load("message_queue/user__a")
+    @m_br.should be_an_instance_of Messager::Message
+    @user_a = load("messager/user__a")
   end
 
   it 'has body' do
@@ -27,13 +27,13 @@ describe MessageQueue::Message do
 
   it 'may have receiver' do
     @m_br.receiver.should be_nil
-    @user_b = load("message_queue/user__b")
+    @user_b = load("messager/user__b")
     @m_us.receiver.should == @user_b
   end
 
   it 'may have channel' do
     @m_br.channel.should be_nil
-    @uch_jp = load("message_queue/channel__japan")
+    @uch_jp = load("messager/channel__japan")
     @m_ch.receiver.should == @ch_jp
   end
 
@@ -48,7 +48,7 @@ describe MessageQueue::Message do
 
   it 'may has sessions' do
     @user_a.sessions.length.should > 0
-    new_user = MessageQueue::User.create(:name => 'new', :password => 'none')
+    new_user = Messager::User.create(:name => 'new', :password => 'none')
     new_user.sessions.should be_empty
   end
 

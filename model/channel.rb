@@ -1,4 +1,4 @@
-module MessageQueue
+module Messager
   class Channel < Sequel::Model
     set_schema do
       primary_key :id

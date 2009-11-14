@@ -1,6 +1,6 @@
 require 'digest/sha1'
 
-module MessageQueue
+module Messager
   class << self
     def register name, password
       begin

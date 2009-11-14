@@ -2,18 +2,18 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/../model_helper'
 
-describe MessageQueue::User do
-  include MessageQueue
+describe Messager::User do
+  include Messager
   before do
-    load("message_queue/session")
+    load("messager/session")
 
-    @user_a = load("message_queue/user__a")
-    @user_b = load("message_queue/user__b")
-    @user_c = load("message_queue/user__c")
+    @user_a = load("messager/user__a")
+    @user_b = load("messager/user__b")
+    @user_c = load("messager/user__c")
   end
 
   it 'has user class' do
-    @user_a.should be_an_instance_of MessageQueue::User
+    @user_a.should be_an_instance_of Messager::User
   end
 
   it 'has columns' do
@@ -31,7 +31,7 @@ describe MessageQueue::User do
 
   it 'may has sessions' do
     @user_a.sessions.length.should > 0
-    new_user = MessageQueue::User.create(:name => 'new', :password => 'none')
+    new_user = Messager::User.create(:name => 'new', :password => 'none')
     new_user.sessions.should be_empty
   end
 
