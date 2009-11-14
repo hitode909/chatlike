@@ -2,16 +2,29 @@ require 'digest/sha1'
 require 'securerandom'
 
 module MessageQueue
+
   class << self
     def register name, password
-      'j'
+      begin
+        u = User.create(:name => name, :password => password)
+      rescue(Sequel::DatabaseError) => e
+        raise DupricateUser
+      end
+      u.create_session
     end
 
     def login name, password
-      'j'
+      u = User.find(:name => name, :password => password)
+      raise UserNotFound unless u
+      u.create_session
     end
 
-    def logout name, password
+    def logout key
+      Session.find(:random_key => key).kill
+    end
+
+    def session key
+      Session.find(:random_key => key, :is_alive => true)
     end
 
     def get
@@ -20,6 +33,10 @@ module MessageQueue
     def post
     end
   end
+
+  class DupricateUser < Exception;end
+  class UserNotFound < Exception;end
+  class SessionNotFound < Exception;end
 
   class User < Sequel::Model
     set_schema do
@@ -40,6 +57,13 @@ module MessageQueue
 
     def before_create
       self.random_key = SecureRandom.hex(32)
+    end
+
+    def create_session(channel = nil)
+      if channel
+        channel = Channel.find_or_create(:name => channel)
+      end
+      Session.create(:user => self, :channel => channel)
     end
   end
 
