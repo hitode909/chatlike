@@ -9,7 +9,7 @@ class ApiController < JsonController
   def register
     return unless request.post? and request[:name] and request[:password]
     begin
-      session = Messager.register(request[:name], request[:password])
+      session = Messager.register(request[:name], request[:password], request[:channel])
     rescue(Messager::DupricateUser) => e
       return raised_error(e)
     end
@@ -19,7 +19,7 @@ class ApiController < JsonController
   def login
     return unless request.post? and request[:name] and request[:password]
     begin
-      session = Messager.login(request[:name], request[:password])
+      session = Messager.login(request[:name], request[:password], request[:channel])
     rescue(Messager::UserNotFound) => e
       return raised_error(e)
     end

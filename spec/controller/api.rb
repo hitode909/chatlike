@@ -19,6 +19,13 @@ describe MainController do
     json(last_response.body)["data"].length.should > 32
   end
 
+  should 'can register with channel' do
+    post('/api/register', :name => 'newa', :password => 'newa', :channel => "cha")
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].length.should > 32
+  end
+
   should 'cannot register dupricate user' do
     post('/api/register', :name => 'newb', :password => 'newb')
     json(last_response.body)["status"].should == "ok"
@@ -35,6 +42,12 @@ describe MainController do
     json(last_response.body)["data"].length.should > 32
   end
 
+  should 'can login with channel' do
+    post('/api/login', :name => 'a', :password => 'a', :channel => "cha")
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].length.should > 32
+  end
   should 'cannot login with invalid user' do
     post('/api/login', :name => 'a', :password => 'foobar')
     last_response.status.should == 200

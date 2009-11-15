@@ -24,7 +24,7 @@ module Messager
       self.random_key = SecureRandom.hex(32)
     end
 
-    def create_session(channel = nil)
+    def create_session(channel = nil) # XXX: channel should String
       if channel
         channel = Channel.find_or_create(:name => channel)
       end

@@ -25,6 +25,11 @@ describe Messager do
     a.should_not == b
   end
 
+  it 'provides register with channel' do
+    s = Messager.register('a', 'aa', 'channel_a')
+    s.channel.name.should == 'channel_a'
+  end
+
   it 'rejects dupricate user' do
     Messager.register('f', 'ff')
     lambda {
@@ -37,6 +42,12 @@ describe Messager do
     a2 = Messager.login('a', 'aa')
 
     a1.should_not == a2
+  end
+
+  it 'provides login with channel' do
+    Messager.register('a', 'aa')
+    s = Messager.login('a', 'aa', 'channel_a')
+    s.channel.name.should == 'channel_a'
   end
 
   it 'rejects login of not registered user' do
