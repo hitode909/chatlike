@@ -13,7 +13,7 @@ class ApiController < JsonController
     rescue(Messager::DupricateUser) => e
       return raised_error(e)
     end
-    session.random_key
+    data(session)
   end
 
   def login
@@ -23,7 +23,7 @@ class ApiController < JsonController
     rescue(Messager::UserNotFound) => e
       return raised_error(e)
     end
-    session.random_key
+    data(session)
   end
 
   def get
