@@ -38,6 +38,16 @@ describe Messager::Session do
      @session_a.random_key.should_not == @session_a_2.random_key
   end
 
+  it 'can cast to hash' do
+    hash = @session_a.to_hash
+    hash.should be_an_instance_of Hash
+    hash[:random_key].should == @session_a.random_key
+    hash[:user_name].should == @session_a.user.name
+    hash[:channel].should be_nil
+
+    @session_a_ch_jp.to_hash[:channel].should == @session_a_ch_jp.channel.name
+  end
+
   it 'has expire' do
     @now = Time.now
     Time.stub!(:now).and_return @now

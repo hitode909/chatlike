@@ -17,6 +17,14 @@ module Messager
     many_to_one :channel
     create_table unless table_exists?
 
+    def to_hash
+      {
+        :random_key => self.random_key,
+        :user_name  => self.user.name,
+        :channel => self.channel ? self.channel.name : nil
+      }
+    end
+
     def before_create
       self.created_at = Time.now
       self.expire_at  = Time.now + self.expire_duration
