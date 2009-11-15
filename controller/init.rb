@@ -42,6 +42,12 @@ class JsonController < Controller
       :error => messages
     }
   end
+
+  def data(object)
+    { :status => "ok",
+      :data => object.to_hash
+    }
+  end
 end
 
 
