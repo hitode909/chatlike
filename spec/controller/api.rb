@@ -129,6 +129,10 @@ describe MainController do
     json(last_response.body)["data"].should == nil
   end
 
-  # TODO: post with channel or receiver
+  should 'can post or get with channel'
+
+  should 'can post or get with receiver'
+
+  should 'can post or get with channel and receiver'
 
 end
