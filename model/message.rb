@@ -19,5 +19,15 @@ module Messager
     def before_create
       self.created_at = Time.now
     end
+
+    def to_hash
+      {
+        :body => self.body,
+        :author => self.author.name,
+        :receiver => self.receiver ? self.receiver.name : nil,
+        :channel => self.channel ? self.channel.name : nil,
+        :created_at => self.created_at
+      }
+    end
   end
 end

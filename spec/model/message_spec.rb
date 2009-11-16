@@ -37,6 +37,15 @@ describe Messager::Message do
     @m_ch.receiver.should == @ch_jp
   end
 
+  it 'can cast to hash' do
+    @m_br.to_hash.should be_kind_of Hash
+    @m_br.to_hash[:body].should == 'broadcast'
+    @m_br.to_hash[:created_at].should be_kind_of Time
+    @m_br.to_hash[:author].should == 'user_a'
+    @m_us.to_hash[:receiver].should == 'user_b'
+    @m_ch.to_hash[:channel].should == 'japan'
+  end
+
 =begin
   it 'has random key' do
     @user_a.random_key.should be_an_instance_of String
