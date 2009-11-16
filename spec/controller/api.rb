@@ -77,6 +77,10 @@ describe MainController do
     post('/api/post', :session => token, :body => 'hello')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"]["author"].should == 'a'
+    json(last_response.body)["data"]["body"].should == 'hello'
+    json(last_response.body)["data"]["channel"].should == nil
+    json(last_response.body)["data"]["receiver"].should == nil
   end
 
   should 'cannot post without body' do
@@ -109,17 +113,22 @@ describe MainController do
     get('/api/get', :session => token_b)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["data"].should == "hello"
+    json(last_response.body)["data"]["body"].should == "hello"
+    json(last_response.body)["data"]["author"].should == "a"
+    json(last_response.body)["data"]["receiver"].should == nil
+    json(last_response.body)["data"]["channel"].should == nil
 
     get('/api/get', :session => token_b)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["data"].should == "world"
+    json(last_response.body)["data"]["body"].should == "world"
 
     get('/api/get', :session => token_b)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["data"].should == ""
+    json(last_response.body)["data"].should == nil
   end
+
+  # TODO: post with channel or receiver
 
 end
