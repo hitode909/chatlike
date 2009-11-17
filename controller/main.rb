@@ -28,6 +28,14 @@ class ApiController < JsonController
     data(session)
   end
 
+  def logout
+    return unless request.post? and check_session
+    @session.kill
+    data(@session)
+  rescue => e
+    raised_error(e)
+  end
+
   def get
     return unless request.get? and check_session
     from = Time.now

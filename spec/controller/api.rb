@@ -253,4 +253,23 @@ describe MainController do
     get('/api/members', :session => session_a_cool["random_key"], :channel => "hot")
     json(last_response.body)["data"].should == %w{ a }
   end
+
+  should 'can logout' do
+    post('/api/login', :name => 'a', :password => 'a')
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    session_a = json(last_response.body)["data"]
+    session_a["user_name"].should == "a"
+
+    post('/api/logout', :session => session_a["random_key"])
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    session_a["user_name"].should == "a"
+
+    get('/api/get', :session => session_a["random_key"])
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ng"
+    json(last_response.body)["error"].should.include("InvalidSession")
+  end
+
 end
