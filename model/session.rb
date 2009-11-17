@@ -8,8 +8,8 @@ module Messager
       String :random_key, :unique => true
       foreign_key :user_id, :null => false
       foreign_key :channel_id
-      time :created_at
-      time :expire_at
+      datetime :created_at
+      datetime :expire_at
       Integer :last_fetched, :null => false, :default => 0
       Boolean :is_alive, :default => true
     end

@@ -8,7 +8,7 @@ module Messager
       foreign_key :receiver_id
       foreign_key :channel_id
       Boolean :loopback, :null => false, :default => false
-      time :created_at
+      datetime :created_at
     end
     many_to_one :author, :class => User
     many_to_one :author_session, :class => Session
