@@ -1,7 +1,7 @@
 # -*- coding: nil -*-
 class MainController < Controller
   def index
-    @title = "Welcome to Ramaze!"
+    @title = "Chat"
   end
 end
 
