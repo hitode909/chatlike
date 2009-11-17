@@ -3,7 +3,11 @@ require 'sequel'
 
 DB_ENV rescue  DB_ENV = 'app'
 Sequel::Model.plugin(:schema)
-DB = Sequel.sqlite(DB_ENV == 'test' ? 'test.db' : 'app.db')
+if DB_ENV == 'test'
+  DB = Sequel.sqlite('test.db')
+else
+  DB = Sequel.mysql 'chatlike', :user => 'nobody', :password => 'nobody', :host => 'localhost', :encoding => 'utf8'
+end
 
 require 'model/messager'
 require 'model/user'
