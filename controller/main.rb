@@ -15,7 +15,7 @@ class ApiController < JsonController
     rescue(Messager::DupricateUser) => e
       return raised_error(e)
     end
-    data(session)
+    {:session => session.to_hash}
   end
 
   def login
@@ -25,13 +25,13 @@ class ApiController < JsonController
     rescue(Messager::UserNotFound) => e
       return raised_error(e)
     end
-    data(session)
+    {:session => session.to_hash}
   end
 
   def logout
     return unless request.post? and check_session
     @session.kill
-    data(@session)
+    {:session => @session.to_hash}
   rescue => e
     raised_error(e)
   end
