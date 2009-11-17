@@ -36,7 +36,7 @@ jQuery.extend({
                         $.newSession(res.data);
                         $.startPolling();
                     } else {
-                        $.each(res.error, function() {
+                        $.each(res.errors, function() {
                             $.errorMessage(this.toString());
                         });
                     }
@@ -56,7 +56,7 @@ jQuery.extend({
                         $(":text", form).val("");
                         $.receiveChatMessage(res.data);
                     } else {
-                        $.each(res.error, function() {
+                        $.each(res.errors, function() {
                             $.errorMessage(this.toString());
                         });
                     }
@@ -79,7 +79,7 @@ jQuery.extend({
                     if (res.status == "ok") {
                         location.replace("/");
                     } else {
-                        $.each(res.error, function() {
+                        $.each(res.errors, function() {
                             $.errorMessage(this.toString());
                         });
                     }
@@ -122,7 +122,7 @@ jQuery.extend({
                             setTimeout(getMessage, 10000);
                         }
                     } else {
-                        $.each(res.error, function() {
+                        $.each(res.errors, function() {
                             $.errorMessage(this.toString());
                         });
                         setTimeout(getMessage, 10000);

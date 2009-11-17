@@ -39,7 +39,7 @@ describe MainController do
     post('/api/register', :name => 'newb', :password => 'newb')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
-    json(last_response.body)["error"].should.include("DupricateUser")
+    json(last_response.body)["errors"].should.include("DupricateUser")
   end
 
   should 'can login' do
@@ -66,7 +66,7 @@ describe MainController do
     post('/api/login', :name => 'a', :password => 'foobar')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
-    json(last_response.body)["error"].should.include("UserNotFound")
+    json(last_response.body)["errors"].should.include("UserNotFound")
   end
 
   # XXX: channel
@@ -91,14 +91,14 @@ describe MainController do
     post('/api/post', :session => token)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
-    json(last_response.body)["error"].should.include("BodyRequired")
+    json(last_response.body)["errors"].should.include("BodyRequired")
   end
 
   should 'cannot post without session' do
     post('/api/post', :body => "cool")
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
-    json(last_response.body)["error"].should.include("SessionRequired")
+    json(last_response.body)["errors"].should.include("SessionRequired")
   end
 
   should 'can get message' do
@@ -182,7 +182,7 @@ describe MainController do
     post('/api/post', :body => "hi, nil", :session => session_a["random_key"], :receiver => 'niluser')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
-    json(last_response.body)["error"].should.include("ReceiverNotFound")
+    json(last_response.body)["errors"].should.include("ReceiverNotFound")
   end
 
   should 'can post or get with channel and receiver' do
@@ -248,7 +248,7 @@ describe MainController do
     get('/api/members', :session => session_a["random_key"])
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
-    json(last_response.body)["error"].should.include("ChannelNotFound")
+    json(last_response.body)["errors"].should.include("ChannelNotFound")
 
     get('/api/members', :session => session_a_cool["random_key"], :channel => "hot")
     json(last_response.body)["data"].should == %w{ a }
@@ -269,7 +269,7 @@ describe MainController do
     get('/api/get', :session => session_a["random_key"])
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
-    json(last_response.body)["error"].should.include("InvalidSession")
+    json(last_response.body)["errors"].should.include("InvalidSession")
   end
 
 end

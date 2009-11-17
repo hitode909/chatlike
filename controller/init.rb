@@ -35,13 +35,7 @@ class JsonController < Controller
   end
   def raised_error(*errors)
     { :status => "ng",
-      :error => errors.map{ |e| e.message.split("::").last}
-    }
-  end
-
-  def error(*messages)
-    { :status => "ng",
-      :error => messages
+      :errors => errors.map{ |e| e.message.split("::").last}
     }
   end
 
