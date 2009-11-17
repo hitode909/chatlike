@@ -78,10 +78,10 @@ describe MainController do
     post('/api/post', :session => token, :body => 'hello')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["post"]["author"].should == 'a'
-    json(last_response.body)["post"]["body"].should == 'hello'
-    json(last_response.body)["post"]["channel"].should == nil
-    json(last_response.body)["post"]["receiver"].should == nil
+    json(last_response.body)["message"]["author"].should == 'a'
+    json(last_response.body)["message"]["body"].should == 'hello'
+    json(last_response.body)["message"]["channel"].should == nil
+    json(last_response.body)["message"]["receiver"].should == nil
   end
 
   should 'cannot post without body' do
@@ -114,20 +114,20 @@ describe MainController do
     get('/api/get', :session => token_b)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["post"]["body"].should == "hello"
-    json(last_response.body)["post"]["author"].should == "a"
-    json(last_response.body)["post"]["receiver"].should == nil
-    json(last_response.body)["post"]["channel"].should == nil
+    json(last_response.body)["message"]["body"].should == "hello"
+    json(last_response.body)["message"]["author"].should == "a"
+    json(last_response.body)["message"]["receiver"].should == nil
+    json(last_response.body)["message"]["channel"].should == nil
 
     get('/api/get', :session => token_b)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["post"]["body"].should == "world"
+    json(last_response.body)["message"]["body"].should == "world"
 
     get('/api/get', :session => token_b)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["post"].should == nil
+    json(last_response.body)["message"].should == nil
   end
 
   should 'can post or get with channel' do
@@ -143,14 +143,14 @@ describe MainController do
     post('/api/post', :body => "hi, cool", :session => session_a["random_key"])
     get('/api/get', :session => session_b["random_key"])
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["post"]["body"].should == "hi, cool"
-    json(last_response.body)["post"]["author"].should == "a"
-    json(last_response.body)["post"]["receiver"].should == nil
-    json(last_response.body)["post"]["channel"].should == "cool"
+    json(last_response.body)["message"]["body"].should == "hi, cool"
+    json(last_response.body)["message"]["author"].should == "a"
+    json(last_response.body)["message"]["receiver"].should == nil
+    json(last_response.body)["message"]["channel"].should == "cool"
 
     get('/api/get', :session => session_c["random_key"])
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["post"].should == nil
+    json(last_response.body)["message"].should == nil
   end
 
   should 'can post or get with receiver' do
@@ -166,14 +166,14 @@ describe MainController do
     post('/api/post', :body => "hi, b", :session => session_a["random_key"], :receiver => 'b')
     get('/api/get', :session => session_b["random_key"])
     json(last_response.body)["status"].should == "ok"
-     json(last_response.body)["post"]["body"].should == "hi, b"
-     json(last_response.body)["post"]["author"].should == "a"
-     json(last_response.body)["post"]["receiver"].should == "b"
-     json(last_response.body)["post"]["channel"].should == nil
+     json(last_response.body)["message"]["body"].should == "hi, b"
+     json(last_response.body)["message"]["author"].should == "a"
+     json(last_response.body)["message"]["receiver"].should == "b"
+     json(last_response.body)["message"]["channel"].should == nil
 
     get('/api/get', :session => session_c["random_key"])
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["post"].should == nil
+    json(last_response.body)["message"].should == nil
   end
 
   should 'reject messages for not exist user' do
@@ -198,14 +198,14 @@ describe MainController do
     post('/api/post', :body => "hi, cool, b", :receiver => "b", :session => session_a_ch["random_key"])
     get('/api/get', :session => session_b_ch["random_key"])
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["post"]["body"].should == "hi, cool, b"
-    json(last_response.body)["post"]["author"].should == "a"
-    json(last_response.body)["post"]["receiver"].should == "b"
-    json(last_response.body)["post"]["channel"].should == "cool"
+    json(last_response.body)["message"]["body"].should == "hi, cool, b"
+    json(last_response.body)["message"]["author"].should == "a"
+    json(last_response.body)["message"]["receiver"].should == "b"
+    json(last_response.body)["message"]["channel"].should == "cool"
 
     get('/api/get', :session => session_b["random_key"])
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["post"].should == nil
+    json(last_response.body)["message"].should == nil
   end
 
   should 'comet with timeout' do
