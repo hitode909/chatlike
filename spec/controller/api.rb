@@ -185,5 +185,26 @@ describe MainController do
     json(last_response.body)["error"].should.include("ReceiverNotFound")
   end
 
-  should 'can post or get with channel and receiver'
+  should 'can post or get with channel and receiver' do
+    post('/api/login', :name => 'a', :password => 'a', :channel => "cool")
+    session_a_ch = json(last_response.body)["data"]
+
+    post('/api/login', :name => 'b', :password => 'b', :channel => "cool")
+    session_b_ch = json(last_response.body)["data"]
+
+    post('/api/login', :name => 'b', :password => 'b')
+    session_b = json(last_response.body)["data"]
+
+    post('/api/post', :body => "hi, cool, b", :receiver => "b", :session => session_a_ch["random_key"])
+    get('/api/get', :session => session_b_ch["random_key"])
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"]["body"].should == "hi, cool, b"
+    json(last_response.body)["data"]["author"].should == "a"
+    json(last_response.body)["data"]["receiver"].should == "b"
+    json(last_response.body)["data"]["channel"].should == "cool"
+
+    get('/api/get', :session => session_b["random_key"])
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].should == nil
+end
 end
