@@ -16,7 +16,22 @@ jQuery.extend({
         $("#message").prepend(p);
     },
     sessionsReceived: function(sessions) {
-        $("#main #sessions").text(sessions.join(", "));
+        var ul = $("<ul>");
+        var found = false;
+        $.each(sessions, function() {
+            var name = this.toString();
+            console.log(name);
+            var li = $("<li>");
+            console.log([name, $.session.user_name]);
+            if (!found && name == $.session.user_name) {
+                li.append($("<strong>").text(name));
+                found = true;
+            } else {
+                li.append("<span>").text(name);
+            }
+            ul.append(li);
+        });
+        $("#main #sessions").empty().append($("<span>").text("sessions:")).append(ul);
     },
     newSession: function(session) {
         if (!session) return;
