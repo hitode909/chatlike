@@ -37,16 +37,26 @@ ul, ol {
     color: #ff0000;
 }
 
-#message .username {
+#message .message .username {
     font-weight: bold;
 }
 
-#message .body {
+#message .message .body {
     padding-left: 5px;
 }
 
-#message .timestamp {
+#message .message .timestamp {
     font-size: 80%;
     float: right;
     color: #666;
+}
+
+#message .message .username {
+    font-size: 80%;
+    font-weight: bold;
+}
+
+#message .system .body {
+    font-size: 80%;
+    color: #333;
 }

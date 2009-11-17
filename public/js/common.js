@@ -9,6 +9,9 @@ jQuery.extend({
     },
     messageReceived: function(message) {
         var p = $("<p>").addClass("message");
+        if (message.is_system) {
+            p.addClass("system");
+        }
         p.append($("<span>").addClass("username").text(message.author)
         ).append($("<span>").addClass("body").text(message.body)
         ).append($("<span>").addClass("timestamp").text(message.created_at));
