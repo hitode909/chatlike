@@ -44,23 +44,21 @@ class ApiController < JsonController
     from = Time.now
     timeout_sec = request[:timeout] ? request[:timeout].to_f : nil rescue nil
     timeout_sec = 30 if timeout_sec and not (0..60).include?(timeout_sec)
-    unless timeout_sec
-      m = @session.receive_message
-      return m ? {:message => m.to_hash} : { }
-    end
+    sleep_interval = 0.4
 
     begin
-      timeout(timeout_sec) do
+      timeout(timeout_sec || 30) do
         loop do
           message = @session.receive_message
           if message
-            hash = {:message =>m.to_hash }
+            hash = {:message =>message.to_hash }
             if message.is_system and @session.channel
               hash[:sessions] = @session.channel.sessions.map{ |s| s.user.name }
             end
             return hash
           end
-          sleep 0.1
+          raise Timeout::Error unless timeout_sec
+          sleep sleep_interval
         end
       end
     rescue Timeout::Error

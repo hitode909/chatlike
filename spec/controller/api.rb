@@ -214,4 +214,40 @@ describe MainController do
     json(last_response.body)["errors"].should.include("InvalidSession")
   end
 
+  should 'receive system message' do
+    post('/api/login', :name => "a", :password => "a", :channel => 'cool')
+    session_new_a = json(last_response.body)["session"]
+
+    get('/api/get', :session => @session_b_cool.random_key)
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["message"]["body"].should == "logged in"
+    json(last_response.body)["message"]["author"].should == "a"
+    json(last_response.body)["message"]["receiver"].should == nil
+    json(last_response.body)["message"]["channel"].should == "cool"
+    json(last_response.body)["message"]["is_system"].should == true
+    json(last_response.body)["sessions"].sort.should == %w{ a a b c }
+
+    post('/api/logout', :session => session_new_a["random_key"])
+
+    get('/api/get', :session => @session_b_cool.random_key)
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["message"]["body"].should == "logged out"
+    json(last_response.body)["message"]["author"].should == "a"
+    json(last_response.body)["message"]["receiver"].should == nil
+    json(last_response.body)["message"]["channel"].should == "cool"
+    json(last_response.body)["message"]["is_system"].should == true
+    json(last_response.body)["sessions"].sort.should == %w{ a b c }
+
+    post('/api/register', :name => "z", :password => "z")
+
+    get('/api/get', :session => @session_b_cool.random_key)
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["message"]["body"].should == "registered"
+    json(last_response.body)["message"]["author"].should == "z"
+    json(last_response.body)["message"]["receiver"].should == nil
+    json(last_response.body)["message"]["channel"].should == nil
+    json(last_response.body)["message"]["is_system"].should == true
+    json(last_response.body)["sessions"].sort.should == %w{ a b c }
+  end
+
 end
