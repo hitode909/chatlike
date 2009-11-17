@@ -35,7 +35,6 @@ jQuery.extend({
                         $("#main").show();
                         $.newSession(res.data);
                         $.startPolling();
-                        $.getMembers();
                     } else {
                         $.each(res.error, function() {
                             $.errorMessage(this.toString());
@@ -118,5 +117,8 @@ jQuery.extend({
             });
         };
         getMessage();
+
+        $.getMembers();
+        setInterval($.getMembers, 10 * 1000);
     }
 });
