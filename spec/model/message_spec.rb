@@ -45,34 +45,4 @@ describe Messager::Message do
     @m_us.to_hash[:receiver].should == 'user_b'
     @m_ch.to_hash[:channel].should == 'japan'
   end
-
-=begin
-  it 'has random key' do
-    @user_a.random_key.should be_an_instance_of String
-  end
-
-  it 'tokens will differ' do
-    @user_a.random_key.should_not == @user_b.random_key
-  end
-
-  it 'may has sessions' do
-    @user_a.sessions.length.should > 0
-    new_user = Messager::User.create(:name => 'new', :password => 'none')
-    new_user.sessions.should be_empty
-  end
-
-  it 'provides create_session' do
-    before = @user_a.sessions.length
-    s = @user_a.create_session
-    s.user.should == @user_a
-    s.channel.should be_nil
-    @user_a.refresh.sessions.length.should == before + 1
-  end
-
-  it 'provides create_session with channel' do
-    s = @user_a.create_session('ping-pong')
-    s.channel.name.should == 'ping-pong'
-  end
-=end
-
 end
