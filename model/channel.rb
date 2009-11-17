@@ -11,7 +11,7 @@ module Messager
 
     create_table unless table_exists?
 
-    def users
+    def members
       sessions.map(&:user).uniq
     end
 

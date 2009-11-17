@@ -29,10 +29,10 @@ describe Messager::Channel do
     @ch_jp.sessions.should include @session_b_ch_jp
   end
 
-  it 'may has users' do
-    @ch_eu.users.should be_empty
-    @ch_jp.users.length.should > 0
-    @ch_jp.users.should include @user_a
-    @ch_jp.users.should include @user_b
+  it 'may has members' do
+    @ch_eu.members.should be_empty
+    @ch_jp.members.length.should > 0
+    @ch_jp.members.should include @user_a
+    @ch_jp.members.should include @user_b
   end
 end
