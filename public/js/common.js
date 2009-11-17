@@ -51,14 +51,19 @@ jQuery.extend({
                 success: function(res) {
                     console.log(res);
                     if (res.status == "ok") {
+                        $(":text", form).val("");
                         $.receiveChatMessage(res.data);
                     } else {
                         $.each(res.error, function() {
                             $.errorMessage(this.toString());
                         });
                     }
+                },
+                complete: function(res) {
+                    $(":submit, :text", form).attr("disabled", false);
                 }
             });
+            $(":submit, :text", form).attr("disabled", true);
             return false;
         });
     },
