@@ -28,8 +28,21 @@ class ApiController < JsonController
 
   def get
     return unless request.get? and check_session
-    m = @session.receive_message
-    m ? data(m) : { }
+    from = Time.now
+    timeout = request[:timeout].to_i rescue nil
+    loop do
+      m = @session.receive_message
+      if m
+        return data(m)
+      else
+        if timeout and from + timeout > Time.now
+          sleep 0.5
+          redo
+        else
+          return { }
+        end
+      end
+    end
   rescue => e
     raised_error(e)
   end
