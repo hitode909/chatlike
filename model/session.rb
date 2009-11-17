@@ -39,13 +39,19 @@ module Messager
       120
     end
 
-    def is_alive
-      self.expire_at > Time.now
-    end
-
     def kill
       self.expire_at = Time.now - 1
+      self.is_alive = false
       self.save
+    end
+
+    def update_state
+      if self.is_alive and  self.expire_at < Time.now
+        self.kill
+        return true
+      else
+        return false
+      end
     end
 
     def post_message(body, option = { })

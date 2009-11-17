@@ -43,10 +43,15 @@ class ApiController < JsonController
     return unless request.get? and check_session
     from = Time.now
     timeout_sec = request[:timeout] ? request[:timeout].to_f : nil rescue nil
-    timeout_sec = 30 if timeout_sec and not (0..60).include?(timeout_sec)
+    timeout_sec = 60 if timeout_sec and not (0..60).include?(timeout_sec)
+
+    gc_invalid_sessions
+    if @session.channel.members.count < 6
+      last_gcd = Time.now
+    end
 
     begin
-      timeout(timeout_sec || 30) do
+      timeout(timeout_sec || 60) do
         loop do
           message = @session.receive_message
           if message
@@ -58,6 +63,10 @@ class ApiController < JsonController
           end
           raise Timeout::Error unless timeout_sec
           sleep 0.2
+          if last_gcd and last_gcd > Time.now + 10
+            gc_invalid_sessions
+            last_gcd = Time.now
+          end
         end
       end
     rescue Timeout::Error
@@ -86,4 +95,17 @@ class ApiController < JsonController
     return raised_error(RuntimeError.new("ChannelNotFound")) unless channel
     return { :sessions => channel.sessions.map{ |s| s.user.name} }
   end
+
+  private
+  def gc_invalid_sessions
+      if @session.channel
+      @session.channel.invalid_sessions.each { |s|
+        s.post_system_message_to_channel("timeout")
+        s.kill
+      }
+    end
+  end
+
+
+
 end

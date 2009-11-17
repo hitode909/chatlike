@@ -53,10 +53,11 @@ describe Messager::Session do
     Time.stub!(:now).and_return @now
 
     @session_a.is_alive.should be_true
+    @session_a.update_state.should be_false
 
     @now += @session_a.expire_duration * 2
     Time.stub!(:now).and_return @now
-
+    @session_a.update_state.should be_true
     @session_a.is_alive.should be_false
   end
 
