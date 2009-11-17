@@ -3,30 +3,81 @@ jQuery.extend({
         $("#message").prepend($("<p>").text(body));
         $('#message p:gt(5)').remove();
     },
-    bindPostButton: function(key) {
-        $('button.post').click(function() {
-            var body = $(this).val() || $(this).text();
-            $.ajax({
-                type: 'post',
-                url: '/api/post',
-                data: {key: key, data: body},
-                dataType: 'json',
-                success: function(res) {
-                    $.message(res.data);
-                }
-            });
+    errorMessage: function(body) {
+        $("#message").prepend($("<p>").addClass("error").text("error: " + body));
+        $('#message p:gt(5)').remove();
+    },
+    receiveChatMessage: function(message) {
+        $.message(message.author + " said " + message.body + " at " + message.created_at);
+    },
+    newSession: function(session) {
+        if (!session) return;
+        $.extend({
+            session: session
         });
     },
-    startController: function(key) {
-        $(".key").text("key = " + key);
+    setup: function() {
+        $("#register .register-form, #login .login-form").submit(function() {
+            var form = this;
+            $.ajax({
+                type: form.method,
+                url: form.action,
+                data: $(form).serialize(),
+                dataType: 'json',
+                success: function(res) {
+                    console.log(res);
+                    if (res.status == "ok") {
+                        $("#register, #login").hide();
+                        $("#main").show();
+                        $.newSession(res.data);
+                        $.startPolling();
+                    } else {
+                        $.each(res.error, function() {
+                            $.errorMessage(this.toString());
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+        $("#main .post-form").submit(function() {
+            var form = this;
+            $.ajax({
+                type: form.method,
+                url: form.action,
+                data: $(form).serialize() + "&session=" + $.session.random_key,
+                dataType: 'json',
+                success: function(res) {
+                    console.log(res);
+                    if (res.status == "ok") {
+                        $.receiveChatMessage(res.data);
+                    } else {
+                        $.each(res.error, function() {
+                            $.errorMessage(this.toString());
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+    },
+    startPolling: function() {
         var getMessage = function() {
+            var key = $.session.random_key;
+            if (!key) {
+                setTimeout(getMessage, 1000);
+                return;
+            }
             $.getJSON('/api/get',
                 {key: key},
                 function(res) {
-                    $.message(res.data);
-                    getMessage();
-                }
-            );
+                    if (res.data) {
+                        $.receiveChatMessage(res.data);
+                    } else {
+                        $.message("no message" + new Date());
+                    }
+                    setTimeout(getMessage, 1000);
+                });
         };
         getMessage();
     }

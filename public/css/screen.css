@@ -28,3 +28,11 @@ p {
 ul, ol {
   margin-left: 3em;
 }
+
+#main {
+  display: none;
+}
+
+.error {
+    color: #ff0000;
+}

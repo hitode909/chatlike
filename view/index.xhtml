@@ -1,7 +1,14 @@
 <script type="text/javascript" src="/public/js/common.js"></script>
+<script type="text/javascript">
+  $(function() {
+    $.setup();
+  });
+</script>
+<table>
+  <tr><td>
 <div id="register">
   <h2>Register</h2>
-  <form method="post" action="/api/register">
+  <form class="register-form" method="post" action="/api/register">
     <table>
       <tr><th>Name</th><td><input type="text" size="20" name="name"></input></td></tr>
       <tr><th>Password</th><td><input type="text" size="20" name="password"></input></td></tr>
@@ -10,27 +17,28 @@
     <input type="hidden" name="channel" value="main"></input>
   </form>
 </div>
-
+</td><td>
 <div id="login">
   <h2>Login</h2>
-  <form method="post" action="/api/login">
+  <form class="login-form" method="post" action="/api/login">
     <table>
       <tr><th>Name</th><td><input type="text" size="20" name="name"></input></td></tr>
       <tr><th>Password</th><td><input type="text" size="20" name="password"></input></td></tr>
     </table>
-    <input type="submit" value="Register"></input>
+    <input type="submit" value="Login"></input>
     <input type="hidden" name="channel" value="main"></input>
   </form>
 </div>
+</td></tr></table>
 
 <div id="main">
   <h2>Main</h2>
-  <div></div>
-  <form method="post" action="/api/post">
+  <form class="post-form" method="post" action="/api/post">
     <input type="text" name="body" size="80"></input>
     <input type="submit" value="Post"></input>
   </form>
-  <form method="post" action="/api/logout">
+  <form class="logout-form" method="post" action="/api/logout">
     <input type="submit" value="Logout"></input>
   </form>
 </div>
+<div id="message"></div>
