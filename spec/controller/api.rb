@@ -206,5 +206,18 @@ describe MainController do
     get('/api/get', :session => session_b["random_key"])
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["data"].should == nil
-end
+  end
+
+  should 'comet with timeout' do
+    require 'timeout'
+    post('/api/login', :name => 'a', :password => 'a')
+    session_a = json(last_response.body)["data"]
+
+    # XXX: 0.1 sec is enough??
+    lambda {
+      timeout(0.1) {
+        get('/api/get', :session => session_a["random_key"], :timeout => 10)
+      }
+    }.should.raise(Timeout::Error)
+  end
 end

@@ -31,7 +31,7 @@ class ApiController < JsonController
   def get
     return unless request.get? and check_session
     from = Time.now
-    timeout_sec = request[:timeout] ? request[:timeout].to_i : nil rescue nil
+    timeout_sec = request[:timeout] ? request[:timeout].to_f : nil rescue nil
     timeout_sec = 30 if timeout_sec and not (0..60).include?(timeout_sec)
     unless timeout_sec
       m = @session.receive_message
