@@ -68,6 +68,25 @@ jQuery.extend({
             //$(":submit, :text", form).attr("disabled", true);
             return false;
         });
+        $("#main .logout-form").submit(function() {
+            var form = this;
+            $.ajax({
+                type: form.method,
+                url: form.action,
+                data: $(form).serialize() + "&session=" + $.session.random_key,
+                dataType: 'json',
+                success: function(res) {
+                    if (res.status == "ok") {
+                        location.replace("/");
+                    } else {
+                        $.each(res.error, function() {
+                            $.errorMessage(this.toString());
+                        });
+                    }
+                }
+            });
+            return false;
+        });
     },
     getMembers: function() {
         $.ajax({
