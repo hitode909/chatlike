@@ -46,7 +46,7 @@ class ApiController < JsonController
     timeout_sec = 60 if timeout_sec and not (0..60).include?(timeout_sec)
 
     gc_invalid_sessions
-    if @session.channel.members.count < 6
+    if @session.channel.sessions.count < 6
       last_gcd = Time.now
     end
 
