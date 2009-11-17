@@ -55,7 +55,6 @@ class ApiController < JsonController
         loop do
           message = @session.receive_message
           if message
-            @session.refresh
             hash = {:message =>message.to_hash }
             if message.is_system and @session.channel
               hash[:sessions] = @session.channel.sessions.map{ |s| s.user.name }
@@ -64,7 +63,7 @@ class ApiController < JsonController
           end
           raise Timeout::Error unless timeout_sec
           sleep 0.2
-          if last_gcd and last_gcd > Time.now + 10
+          if last_gcd and last_gcd + 10 < Time.now
             gc_invalid_sessions
             last_gcd = Time.now
           end
@@ -99,8 +98,8 @@ class ApiController < JsonController
 
   private
   def gc_invalid_sessions
-      if @session.channel
-      @session.channel.invalid_sessions.each { |s|
+    if @session.channel
+      @session.channel.refresh.invalid_sessions.each { |s|
         s.post_system_message_to_channel("timeout")
         s.kill
       }
