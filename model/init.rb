@@ -6,6 +6,7 @@ Sequel::Model.plugin(:schema)
 if DB_ENV == 'test'
   DB = Sequel.sqlite('test.db')
 else
+  # create database chatlike character set utf8;
   DB = Sequel.mysql 'chatlike', :user => 'nobody', :password => 'nobody', :host => 'localhost', :encoding => 'utf8'
 end
 
