@@ -63,10 +63,10 @@ jQuery.extend({
                     }
                 },
                 complete: function(res) {
-                    $(":submit, :text", form).attr("disabled", false);
+                    //$(":submit, :text", form).attr("disabled", false);
                 }
             });
-            $(":submit, :text", form).attr("disabled", true);
+            //$(":submit, :text", form).attr("disabled", true);
             return false;
         });
     },
