@@ -180,26 +180,26 @@ describe MainController do
     }.should.raise(Timeout::Error)
   end
 
-  should 'can get members' do
-    get('/api/members', :session => @session_a_cool.random_key)
+  should 'can get sessions' do
+    get('/api/sessions', :session => @session_a_cool.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["members"].class.should == Array
-    json(last_response.body)["members"].sort.should == %w{ a b c}.sort
+    json(last_response.body)["sessions"].class.should == Array
+    json(last_response.body)["sessions"].sort.should == %w{ a b c}.sort
 
-    get('/api/members', :session => @session_a_hot.random_key)
+    get('/api/sessions', :session => @session_a_hot.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    json(last_response.body)["members"].class.should == Array
-    json(last_response.body)["members"].should == %w{ a }
+    json(last_response.body)["sessions"].class.should == Array
+    json(last_response.body)["sessions"].should == %w{ a }
 
-    get('/api/members', :session => @session_a.random_key)
+    get('/api/sessions', :session => @session_a.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
     json(last_response.body)["errors"].should.include("ChannelNotFound")
 
-    get('/api/members', :session => @session_a_cool.random_key, :channel => "hot")
-    json(last_response.body)["members"].should == %w{ a }
+    get('/api/sessions', :session => @session_a_cool.random_key, :channel => "hot")
+    json(last_response.body)["sessions"].should == %w{ a }
   end
 
   should 'can logout' do
