@@ -137,9 +137,8 @@ jQuery.extend({
             $.ajax({
                 type: 'get',
                 url: '/api/get',
-                data: {session: key, timeout: 30},
+                data: {session: key, timeout: 60},
                 dataType: 'json',
-                timeout: 40 * 1000,
                 cache: false,
                 success: function(res) {
                     if (res.status == "ok") {
