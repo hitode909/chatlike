@@ -30,6 +30,7 @@ class JsonController < Controller
     @session = Messager.session(request[:session])
     raise "InvalidSession" unless @session
     @session.update_expire
+    @session.save
     true
   end
   def raised_error(*errors)
