@@ -65,4 +65,11 @@ class ApiController < JsonController
   rescue => e
     raised_error(e)
   end
+
+  def members
+    return unless request.get? and check_session
+    channel = (request[:channel] && Messager::Channel.find(:name => request[:channel])) || @session.channel || nil
+    return raised_error(RuntimeError.new("ChannelNotFound")) unless channel
+    return channel.users.map{ |u| u.name} # XXX: should members, not users
+  end
 end

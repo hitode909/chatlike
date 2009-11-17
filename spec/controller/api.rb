@@ -220,4 +220,37 @@ describe MainController do
       }
     }.should.raise(Timeout::Error)
   end
+
+  should 'can get members' do
+    post('/api/login', :name => 'a', :password => 'a', :channel => "cool")
+    session_a_cool = json(last_response.body)["data"]
+    post('/api/login', :name => 'b', :password => 'b', :channel => "cool")
+    session_b_cool = json(last_response.body)["data"]
+    post('/api/login', :name => 'c', :password => 'c', :channel => "cool")
+    session_c_cool = json(last_response.body)["data"]
+    post('/api/login', :name => 'a', :password => 'a', :channel => "hot")
+    session_a_hot = json(last_response.body)["data"]
+    post('/api/login', :name => 'a', :password => 'a')
+    session_a = json(last_response.body)["data"]
+
+    get('/api/members', :session => session_a_cool["random_key"])
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].class.should == Array
+    json(last_response.body)["data"].sort.should == %w{ a b c}.sort
+
+    get('/api/members', :session => session_a_hot["random_key"])
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].class.should == Array
+    json(last_response.body)["data"].should == %w{ a }
+
+    get('/api/members', :session => session_a["random_key"])
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ng"
+    json(last_response.body)["error"].should.include("ChannelNotFound")
+
+    get('/api/members', :session => session_a_cool["random_key"], :channel => "hot")
+    json(last_response.body)["data"].should == %w{ a }
+  end
 end
