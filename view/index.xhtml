@@ -10,8 +10,8 @@
   <h2>Register</h2>
   <form class="register-form" method="post" action="/api/register">
     <table>
-      <tr><th>Name</th><td><input type="text" size="20" name="name"></input></td></tr>
-      <tr><th>Password</th><td><input type="text" size="20" name="password"></input></td></tr>
+      <tr><th>Name</th><td><input type="text" size="15" name="name"></input></td></tr>
+      <tr><th>Password</th><td><input type="text" size="15" name="password"></input></td></tr>
     </table>
     <input type="submit" value="Register"></input>
     <input type="hidden" name="channel" value="main"></input>
@@ -22,8 +22,8 @@
   <h2>Login</h2>
   <form class="login-form" method="post" action="/api/login">
     <table>
-      <tr><th>Name</th><td><input type="text" size="20" name="name"></input></td></tr>
-      <tr><th>Password</th><td><input type="text" size="20" name="password"></input></td></tr>
+      <tr><th>Name</th><td><input type="text" size="15" name="name"></input></td></tr>
+      <tr><th>Password</th><td><input type="text" size="15" name="password"></input></td></tr>
     </table>
     <input type="submit" value="Login"></input>
     <input type="hidden" name="channel" value="main"></input>
@@ -32,16 +32,13 @@
 </td></tr></table>
 
 <div id="main">
-  <h2>Main</h2>
   <form class="post-form" method="post" action="/api/post">
-    <input type="text" name="body" size="40"></input>
+    <input type="text" name="body" size="30"></input>
     <input type="submit" value="Post"></input>
   </form>
   <form class="logout-form" method="post" action="/api/logout">
     <input type="submit" value="Logout"></input>
   </form>
-  <h2>Sessions</h2>
-  <span id="sessions"></span>
+  <div id="sessions"></span>
 </div>
-<h2>Messages</h2>
 <div id="message"></div>

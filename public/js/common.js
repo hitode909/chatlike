@@ -1,11 +1,9 @@
 jQuery.extend({
     message: function(body) {
         $("#message").prepend($("<p>").text(body));
-        $('#message p:gt(5)').remove();
     },
     errorMessage: function(body) {
         $("#message").prepend($("<p>").addClass("error").text("error: " + body));
-        $('#message p:gt(5)').remove();
     },
     messageReceived: function(message) {
         var p = $("<p>").addClass("message");
@@ -16,7 +14,6 @@ jQuery.extend({
         ).append($("<span>").addClass("body").text(message.body)
         ).append($("<span>").addClass("timestamp").text(message.created_at));
         $("#message").prepend(p);
-        $('#message p:gt(5)').remove();
     },
     sessionsReceived: function(sessions) {
         $("#main #sessions").text(sessions.join(", "));
