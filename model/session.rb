@@ -67,6 +67,17 @@ module Messager
       Message.create(option)
     end
 
+    def post_system_message_to_channel(body, option = { })
+      option.update(
+        :body => body,
+        :author => self.user,
+        :author_session => self,
+        :channel => self.channel,
+        :is_system => true
+      )
+      Message.create(option)
+    end
+
     def post_message_to_me(body, option = { })
       option.update(
         :body => body,

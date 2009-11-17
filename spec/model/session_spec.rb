@@ -106,6 +106,16 @@ describe Messager::Session do
     m.receiver.should be_nil
   end
 
+  it 'post system message to channel' do
+    @ch_jp = load("messager/channel__japan")
+    m = @session_a_ch_jp.post_system_message_to_channel 'sys'
+    m.should be_an_instance_of Messager::Message
+    m.is_system.should be_true
+    m.body.should == 'sys'
+    m.channel.should == @ch_jp
+    m.receiver.should be_nil
+  end
+
   it 'post message to me' do
     m = @session_a.post_message_to_me 'me'
     m.should be_an_instance_of Messager::Message
