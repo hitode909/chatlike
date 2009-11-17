@@ -7,13 +7,16 @@ jQuery.extend({
         $("#message").prepend($("<p>").addClass("error").text("error: " + body));
         $('#message p:gt(5)').remove();
     },
-    receiveChatMessage: function(message) {
+    messageReceived: function(message) {
         var p = $("<p>").addClass("message");
         p.append($("<span>").addClass("username").text(message.author)
         ).append($("<span>").addClass("body").text(message.body)
         ).append($("<span>").addClass("timestamp").text(message.created_at));
         $("#message").prepend(p);
         $('#message p:gt(5)').remove();
+    },
+    sessionsReceived: function(sessions) {
+        $("#main #sessions").text(sessions.join(", "));
     },
     newSession: function(session) {
         if (!session) return;
@@ -29,12 +32,14 @@ jQuery.extend({
                 url: form.action,
                 data: $(form).serialize(),
                 dataType: 'json',
+                cache: false,
                 success: function(res) {
                     if (res.status == "ok") {
                         $("#register, #login").hide();
                         $("#main").show();
                         $.newSession(res.session);
                         $.startPolling();
+                        $.getSessions();
                     } else {
                         $.each(res.errors, function() {
                             $.errorMessage(this.toString());
@@ -51,10 +56,11 @@ jQuery.extend({
                 url: form.action,
                 data: $(form).serialize() + "&session=" + $.session.random_key,
                 dataType: 'json',
+                cache: false,
                 success: function(res) {
                     if (res.status == "ok") {
                         $(":text", form).val("");
-                        $.receiveChatMessage(res.post);
+                        $.messageReceived(res.message);
                     } else {
                         $.each(res.errors, function() {
                             $.errorMessage(this.toString());
@@ -75,6 +81,7 @@ jQuery.extend({
                 url: form.action,
                 data: $(form).serialize() + "&session=" + $.session.random_key,
                 dataType: 'json',
+                cache: false,
                 success: function(res) {
                     if (res.status == "ok") {
                         location.replace("/");
@@ -88,14 +95,21 @@ jQuery.extend({
             return false;
         });
     },
-    getMembers: function() {
+    getSessions: function() {
         $.ajax({
             type: "get",
-            url: "/api/members",
+            url: "/api/sessions",
             data: {session: $.session.random_key},
             dataType: 'json',
+            cache: false,
             success: function(res) {
-                $("#main #members").text(res.members.join(", "));
+                if (res.status == "ok") {
+                    $.sessionsReceived(res.sessions);
+                } else {
+                    $.each(res.errors, function() {
+                        $.errorMessage(this.toString());
+                    });
+                }
             }
         });
     },
@@ -113,13 +127,17 @@ jQuery.extend({
                 data: {session: key, timeout: 30},
                 dataType: 'json',
                 timeout: 40 * 1000,
+                cache: false,
                 success: function(res) {
                     if (res.status == "ok") {
-                        if (res.post) {
-                            $.receiveChatMessage(res.post);
-                            return(getMessage());
+                        if (res.message) {
+                            $.messageReceived(res.message);
+                            setTimeout(getMessage, 0);
                         } else {
                             setTimeout(getMessage, 10000);
+                        }
+                        if (res.sessions) {
+                            $.sessionsReceived(res.sessions);
                         }
                     } else {
                         $.each(res.errors, function() {
@@ -136,8 +154,5 @@ jQuery.extend({
             });
         };
         getMessage();
-
-        $.getMembers();
-        setInterval($.getMembers, 10 * 1000);
     }
 });
