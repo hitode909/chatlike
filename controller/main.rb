@@ -44,7 +44,6 @@ class ApiController < JsonController
     from = Time.now
     timeout_sec = request[:timeout] ? request[:timeout].to_f : nil rescue nil
     timeout_sec = 30 if timeout_sec and not (0..60).include?(timeout_sec)
-    sleep_interval = 0.4
 
     begin
       timeout(timeout_sec || 30) do
@@ -58,7 +57,7 @@ class ApiController < JsonController
             return hash
           end
           raise Timeout::Error unless timeout_sec
-          sleep sleep_interval
+          sleep 0.2
         end
       end
     rescue Timeout::Error
