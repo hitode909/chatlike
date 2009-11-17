@@ -153,8 +153,37 @@ describe MainController do
     json(last_response.body)["data"].should == nil
   end
 
-  should 'can post or get with receiver'
+  should 'can post or get with receiver' do
+    post('/api/login', :name => 'a', :password => 'a')
+    session_a = json(last_response.body)["data"]
+
+    post('/api/login', :name => 'b', :password => 'b')
+    session_b = json(last_response.body)["data"]
+
+    post('/api/login', :name => 'c', :password => 'c')
+    session_c = json(last_response.body)["data"]
+
+    post('/api/post', :body => "hi, b", :session => session_a["random_key"], :receiver => 'b')
+    get('/api/get', :session => session_b["random_key"])
+    json(last_response.body)["status"].should == "ok"
+     json(last_response.body)["data"]["body"].should == "hi, b"
+     json(last_response.body)["data"]["author"].should == "a"
+     json(last_response.body)["data"]["receiver"].should == "b"
+     json(last_response.body)["data"]["channel"].should == nil
+
+    get('/api/get', :session => session_c["random_key"])
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].should == nil
+  end
+
+  should 'reject messages for not exist user' do
+    post('/api/login', :name => 'a', :password => 'a')
+    session_a = json(last_response.body)["data"]
+    post('/api/post', :body => "hi, nil", :session => session_a["random_key"], :receiver => 'niluser')
+    last_response.status.should == 200
+    json(last_response.body)["status"].should == "ng"
+    json(last_response.body)["error"].should.include("ReceiverNotFound")
+  end
 
   should 'can post or get with channel and receiver'
-
 end

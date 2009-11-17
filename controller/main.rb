@@ -36,7 +36,13 @@ class ApiController < JsonController
 
   def post
     return unless request.post? and check_session and check_request(:body)
-    data(@session.post_message_to_channel(request[:body]))
+    option = { }
+    if request[:receiver]
+      u = Messager::User.find(:name => request[:receiver])
+      return raised_error(raise "ReceiverNotFound") unless u
+      option[:receiver] = u
+    end
+    data(@session.post_message_to_channel(request[:body], option))
   rescue => e
     raised_error(e)
   end
