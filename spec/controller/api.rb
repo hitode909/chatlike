@@ -8,9 +8,13 @@ describe MainController do
 
   before do
     delete_test_db
-    Messager.register('a', 'a')
-    Messager.register('b', 'b')
-    Messager.register('c', 'c')
+    @session_a = Messager.register('a', 'a')
+    @session_b = Messager.register('b', 'b')
+    @session_c = Messager.register('c', 'c')
+    @session_a_cool = Messager.login('a', 'a', 'cool')
+    @session_b_cool = Messager.login('b', 'b', 'cool')
+    @session_c_cool = Messager.login('c', 'c', 'cool')
+    @session_a_hot =  Messager.login('a', 'a', 'hot')
   end
 
   should 'can register' do
@@ -72,10 +76,7 @@ describe MainController do
   # XXX: channel
 
   should 'can post message' do
-    post('/api/login', :name => 'a', :password => 'a')
-    token = json(last_response.body)["session"]["random_key"]
-
-    post('/api/post', :session => token, :body => 'hello')
+    post('/api/post', :session => @session_a.random_key, :body => 'hello')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["message"]["author"].should == 'a'
@@ -85,10 +86,7 @@ describe MainController do
   end
 
   should 'cannot post without body' do
-    post('/api/login', :name => 'a', :password => 'a')
-    token = json(last_response.body)["session"]["random_key"]
-
-    post('/api/post', :session => token)
+    post('/api/post', :session => @session_a.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
     json(last_response.body)["errors"].should.include("BodyRequired")
@@ -102,16 +100,10 @@ describe MainController do
   end
 
   should 'can get message' do
-    post('/api/login', :name => 'a', :password => 'a')
-    token_a = json(last_response.body)["session"]["random_key"]
+    post('/api/post', :body => "hello", :session => @session_a.random_key)
+    post('/api/post', :body => "world", :session => @session_a.random_key)
 
-    post('/api/login', :name => 'b', :password => 'b')
-    token_b = json(last_response.body)["session"]["random_key"]
-
-    post('/api/post', :body => "hello", :session => token_a)
-    post('/api/post', :body => "world", :session => token_a)
-
-    get('/api/get', :session => token_b)
+    get('/api/get', :session => @session_b.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["message"]["body"].should == "hello"
@@ -119,154 +111,104 @@ describe MainController do
     json(last_response.body)["message"]["receiver"].should == nil
     json(last_response.body)["message"]["channel"].should == nil
 
-    get('/api/get', :session => token_b)
+    get('/api/get', :session => @session_b.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["message"]["body"].should == "world"
 
-    get('/api/get', :session => token_b)
+    get('/api/get', :session => @session_b.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["message"].should == nil
   end
 
   should 'can post or get with channel' do
-    post('/api/login', :name => 'a', :password => 'a', :channel => "cool")
-    session_a = json(last_response.body)["session"]
-
-    post('/api/login', :name => 'b', :password => 'b', :channel => "cool")
-    session_b = json(last_response.body)["session"]
-
-    post('/api/login', :name => 'c', :password => 'c')
-    session_c = json(last_response.body)["session"]
-
-    post('/api/post', :body => "hi, cool", :session => session_a["random_key"])
-    get('/api/get', :session => session_b["random_key"])
+    post('/api/post', :body => "hi, cool", :session => @session_a_cool.random_key)
+    get('/api/get', :session => @session_b_cool.random_key)
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["message"]["body"].should == "hi, cool"
     json(last_response.body)["message"]["author"].should == "a"
     json(last_response.body)["message"]["receiver"].should == nil
     json(last_response.body)["message"]["channel"].should == "cool"
 
-    get('/api/get', :session => session_c["random_key"])
+    get('/api/get', :session => @session_a_cool.random_key)
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["message"].should == nil
   end
 
   should 'can post or get with receiver' do
-    post('/api/login', :name => 'a', :password => 'a')
-    session_a = json(last_response.body)["session"]
-
-    post('/api/login', :name => 'b', :password => 'b')
-    session_b = json(last_response.body)["session"]
-
-    post('/api/login', :name => 'c', :password => 'c')
-    session_c = json(last_response.body)["session"]
-
-    post('/api/post', :body => "hi, b", :session => session_a["random_key"], :receiver => 'b')
-    get('/api/get', :session => session_b["random_key"])
+    post('/api/post', :body => "hi, b", :session => @session_a.random_key, :receiver => 'b')
+    get('/api/get', :session => @session_b.random_key)
     json(last_response.body)["status"].should == "ok"
      json(last_response.body)["message"]["body"].should == "hi, b"
      json(last_response.body)["message"]["author"].should == "a"
      json(last_response.body)["message"]["receiver"].should == "b"
      json(last_response.body)["message"]["channel"].should == nil
 
-    get('/api/get', :session => session_c["random_key"])
+    get('/api/get', :session => @session_c.random_key)
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["message"].should == nil
   end
 
   should 'reject messages for not exist user' do
-    post('/api/login', :name => 'a', :password => 'a')
-    session_a = json(last_response.body)["session"]
-    post('/api/post', :body => "hi, nil", :session => session_a["random_key"], :receiver => 'niluser')
+    post('/api/post', :body => "hi, nil", :session => @session_a.random_key, :receiver => 'niluser')
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
     json(last_response.body)["errors"].should.include("ReceiverNotFound")
   end
 
   should 'can post or get with channel and receiver' do
-    post('/api/login', :name => 'a', :password => 'a', :channel => "cool")
-    session_a_ch = json(last_response.body)["session"]
-
-    post('/api/login', :name => 'b', :password => 'b', :channel => "cool")
-    session_b_ch = json(last_response.body)["session"]
-
-    post('/api/login', :name => 'b', :password => 'b')
-    session_b = json(last_response.body)["session"]
-
-    post('/api/post', :body => "hi, cool, b", :receiver => "b", :session => session_a_ch["random_key"])
-    get('/api/get', :session => session_b_ch["random_key"])
+    post('/api/post', :body => "hi, cool, b", :receiver => "b", :session => @session_a_cool.random_key)
+    get('/api/get', :session => @session_b_cool.random_key)
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["message"]["body"].should == "hi, cool, b"
     json(last_response.body)["message"]["author"].should == "a"
     json(last_response.body)["message"]["receiver"].should == "b"
     json(last_response.body)["message"]["channel"].should == "cool"
 
-    get('/api/get', :session => session_b["random_key"])
+    get('/api/get', :session => @session_b.random_key)
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["message"].should == nil
   end
 
   should 'comet with timeout' do
-    require 'timeout'
-    post('/api/login', :name => 'a', :password => 'a')
-    session_a = json(last_response.body)["session"]
-
     # XXX: 0.1 sec is enough??
     lambda {
       timeout(0.1) {
-        get('/api/get', :session => session_a["random_key"], :timeout => 10)
+        get('/api/get', :session => @session_a.random_key, :timeout => 10)
       }
     }.should.raise(Timeout::Error)
   end
 
   should 'can get members' do
-    post('/api/login', :name => 'a', :password => 'a', :channel => "cool")
-    session_a_cool = json(last_response.body)["session"]
-    post('/api/login', :name => 'b', :password => 'b', :channel => "cool")
-    session_b_cool = json(last_response.body)["session"]
-    post('/api/login', :name => 'c', :password => 'c', :channel => "cool")
-    session_c_cool = json(last_response.body)["session"]
-    post('/api/login', :name => 'a', :password => 'a', :channel => "hot")
-    session_a_hot = json(last_response.body)["session"]
-    post('/api/login', :name => 'a', :password => 'a')
-    session_a = json(last_response.body)["session"]
-
-    get('/api/members', :session => session_a_cool["random_key"])
+    get('/api/members', :session => @session_a_cool.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["members"].class.should == Array
     json(last_response.body)["members"].sort.should == %w{ a b c}.sort
 
-    get('/api/members', :session => session_a_hot["random_key"])
+    get('/api/members', :session => @session_a_hot.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
     json(last_response.body)["members"].class.should == Array
     json(last_response.body)["members"].should == %w{ a }
 
-    get('/api/members', :session => session_a["random_key"])
+    get('/api/members', :session => @session_a.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
     json(last_response.body)["errors"].should.include("ChannelNotFound")
 
-    get('/api/members', :session => session_a_cool["random_key"], :channel => "hot")
+    get('/api/members', :session => @session_a_cool.random_key, :channel => "hot")
     json(last_response.body)["members"].should == %w{ a }
   end
 
   should 'can logout' do
-    post('/api/login', :name => 'a', :password => 'a')
+    post('/api/logout', :session => @session_a.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ok"
-    session_a = json(last_response.body)["session"]
-    session_a["user_name"].should == "a"
+    json(last_response.body)["session"]["user_name"].should == "a"
 
-    post('/api/logout', :session => session_a["random_key"])
-    last_response.status.should == 200
-    json(last_response.body)["status"].should == "ok"
-    session_a["user_name"].should == "a"
-
-    get('/api/get', :session => session_a["random_key"])
+    get('/api/get', :session => @session_a.random_key)
     last_response.status.should == 200
     json(last_response.body)["status"].should == "ng"
     json(last_response.body)["errors"].should.include("InvalidSession")
