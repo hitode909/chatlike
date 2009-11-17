@@ -151,24 +151,24 @@ describe Messager::Session do
   end
 
   it 'receive messages to channel' do
-    @session_a.post_message 'to_jp', :channel => load("messager/channel__japan")
     @session_b_ch_jp = load("messager/session__b_ch_jp")
-    @session_b_ch_jp.receive_message.body.should == 'to_jp'
     @session_c_ch_jp = load("messager/session__c_ch_jp")
+    @session_a.post_message 'to_jp', :channel => load("messager/channel__japan")
+    @session_b_ch_jp.receive_message.body.should == 'to_jp'
     @session_c_ch_jp.receive_message.body.should == 'to_jp'
     @session_b.receive_message.should be_nil
     @session_c.receive_message.should be_nil
   end
 
   it 'receive messages to channel in the user' do
+    @session_b_ch_jp = load("messager/session__b_ch_jp")
+    @session_c_ch_jp = load("messager/session__c_ch_jp")
     @session_a.post_message('to_b_jp',
       :receiver => @user_b,
       :channel => load("messager/channel__japan")
       )
-    @session_b_ch_jp = load("messager/session__b_ch_jp")
     @session_b_ch_jp.receive_message.body.should == 'to_b_jp'
     @session_b.receive_message.should be_nil
-    @session_c_ch_jp = load("messager/session__c_ch_jp")
     @session_c_ch_jp.receive_message.should be_nil
   end
 

@@ -81,13 +81,14 @@ module Messager
       Message.create(option)
     end
 
-    def receive_message
+    def receive_message(all = false)
       query = Messager::Message.filter(:channel_id => self.channel_id, :receiver_id => self.user_id)
       query.or!(:channel_id => self.channel_id, :receiver_id => nil) if self.channel_id
       query.or!(:channel_id => nil, :receiver_id => nil
         ).filter!(:id > self.last_fetched
         ).filter!({:loopback => true} | ({:loopback => false} & ~{:author_session_id => self.id})
         ).order!(:id.asc)
+      query.filter!(:created_at > self.created_at) unless all
       m = query.first
       if m
         self.last_fetched = m.id
