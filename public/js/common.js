@@ -94,6 +94,7 @@ jQuery.extend({
                 url: '/api/get',
                 data: {session: key, timeout: 30},
                 dataType: 'json',
+                timeout: 40 * 1000,
                 success: function(res) {
                     if (res.status == "ok") {
                         if (res.data) {
