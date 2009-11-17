@@ -55,6 +55,7 @@ class ApiController < JsonController
         loop do
           message = @session.receive_message
           if message
+            @session.refresh
             hash = {:message =>message.to_hash }
             if message.is_system and @session.channel
               hash[:sessions] = @session.channel.sessions.map{ |s| s.user.name }
