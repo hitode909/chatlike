@@ -36,19 +36,15 @@ module Messager
     end
 
     def expire_duration
-      600
+      120
     end
 
-    def check_alive
-      self.still_alive or self.kill
-    end
-
-    def still_alive
-      self.is_alive and self.expire_at > Time.now
+    def is_alive
+      self.expire_at > Time.now
     end
 
     def kill
-      self.is_alive = false
+      self.expire_at = Time.now - 1
       self.save
     end
 

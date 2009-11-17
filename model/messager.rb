@@ -22,7 +22,7 @@ module Messager
     end
 
     def session key
-      Session.find(:random_key => key, :is_alive => true)
+      Session.find({:random_key => key} & (:expire_at > Time.now))
     end
 
     def get

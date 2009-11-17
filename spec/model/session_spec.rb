@@ -57,27 +57,12 @@ describe Messager::Session do
     @now += @session_a.expire_duration * 2
     Time.stub!(:now).and_return @now
 
-    @session_a.still_alive.should be_false
+    @session_a.is_alive.should be_false
   end
 
   it 'will die when killed' do
     @session_a.is_alive.should be_true
     @session_a.kill
-    @session_a.is_alive.should be_false
-  end
-
-  it 'will die when expired' do
-    @now = Time.now
-    @session_a.is_alive.should be_true
-
-    Time.stub!(:now).and_return @now
-
-    @session_a.check_alive
-    @session_a.is_alive.should be_true
-
-    Time.stub!(:now).and_return @now + @session_a.expire_duration * 2
-
-    @session_a.check_alive
     @session_a.is_alive.should be_false
   end
 

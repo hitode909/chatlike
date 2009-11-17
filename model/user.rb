@@ -12,7 +12,7 @@ module Messager
     end
     one_to_many :channels
     one_to_many :sessions do |ds|
-      ds.filter('is_alive = ?', true)
+      ds.filter('expire_at > ?', Time.now)
     end
     create_table unless table_exists?
 
