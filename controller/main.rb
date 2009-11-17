@@ -43,14 +43,14 @@ class ApiController < JsonController
     timeout_sec = 30 if timeout_sec and not (0..60).include?(timeout_sec)
     unless timeout_sec
       m = @session.receive_message
-      return m ? data(m) : { }
+      return m ? {:post => m.to_hash} : { }
     end
 
     begin
       timeout(timeout_sec) do
         loop do
           m = @session.receive_message
-          return data(m) if m
+          return {:post => m.to_hash} if m
           sleep 0.1
         end
       end
@@ -69,7 +69,7 @@ class ApiController < JsonController
       return raised_error(raise "ReceiverNotFound") unless u
       option[:receiver] = u
     end
-    data(@session.post_message_to_channel(request[:body], option))
+    {:post => @session.post_message_to_channel(request[:body], option).to_hash}
   rescue => e
     raised_error(e)
   end
@@ -78,6 +78,6 @@ class ApiController < JsonController
     return unless request.get? and check_session
     channel = (request[:channel] && Messager::Channel.find(:name => request[:channel])) || @session.channel || nil
     return raised_error(RuntimeError.new("ChannelNotFound")) unless channel
-    return { :data => channel.sessions.map{ |s| s.user.name} }
+    return { :members => channel.sessions.map{ |s| s.user.name} }
   end
 end
