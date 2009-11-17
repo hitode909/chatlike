@@ -6,7 +6,7 @@ describe Messager::Message do
   before do
     @user_a = load("messager/user__a")
     @session_a = load("messager/session__a")
-    @m_br, @m_us, @m_ch = * load(%w{ messager/message__broadcast messager/message__to_user_b messager/message__to_channel_japan})
+    @m_br, @m_br_sys, @m_us, @m_ch = * load(%w{ messager/message__broadcast messager/message__broadcast_system messager/message__to_user_b messager/message__to_channel_japan})
   end
 
   it 'has user class' do
@@ -45,4 +45,10 @@ describe Messager::Message do
     @m_us.to_hash[:receiver].should == 'user_b'
     @m_ch.to_hash[:channel].should == 'japan'
   end
+
+  it 'can be system message' do
+    @m_br.is_system.should be_false
+    @m_br_sys.is_system.should be_true
+  end
+
 end

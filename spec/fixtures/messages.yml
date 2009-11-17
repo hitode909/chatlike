@@ -2,6 +2,11 @@ broadcast:
   author: a
   author_session: a
   body: broadcast
+broadcast_system:
+  author: a
+  author_session: a
+  body: broadcast_system
+  is_system: true
 to_user_b:
   author: a
   author_session: a
