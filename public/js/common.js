@@ -8,7 +8,12 @@ jQuery.extend({
         $('#message p:gt(5)').remove();
     },
     receiveChatMessage: function(message) {
-        $.message(message.author + " said " + message.body + " at " + message.created_at);
+        var p = $("<p>").addClass("message");
+        p.append($("<span>").addClass("username").text(message.author)
+        ).append($("<span>").addClass("body").text(message.body)
+        ).append($("<span>").addClass("timestamp").text(message.created_at));
+        $("#message").prepend(p);
+        $('#message p:gt(5)').remove();
     },
     newSession: function(session) {
         if (!session) return;
@@ -25,7 +30,6 @@ jQuery.extend({
                 data: $(form).serialize(),
                 dataType: 'json',
                 success: function(res) {
-                    console.log(res);
                     if (res.status == "ok") {
                         $("#register, #login").hide();
                         $("#main").show();
@@ -49,7 +53,6 @@ jQuery.extend({
                 data: $(form).serialize() + "&session=" + $.session.random_key,
                 dataType: 'json',
                 success: function(res) {
-                    console.log(res);
                     if (res.status == "ok") {
                         $(":text", form).val("");
                         $.receiveChatMessage(res.data);
@@ -74,7 +77,6 @@ jQuery.extend({
             data: {session: $.session.random_key},
             dataType: 'json',
             success: function(res) {
-                console.log(res.data);
                 $("#main #members").text(res.data.join(", "));
             }
         });
@@ -96,15 +98,17 @@ jQuery.extend({
                     if (res.status == "ok") {
                         if (res.data) {
                             $.receiveChatMessage(res.data);
+                            return(getMessage());
                         } else {
-                            $.message("no message" + new Date());
+                            setTimeout(getMessage, 10000);
                         }
                     } else {
                         $.each(res.error, function() {
                             $.errorMessage(this.toString());
                         });
+                        setTimeout(getMessage, 10000);
                     }
-                    getMessage();
+                    return true;
                 },
                 error: function(res, status) {
                     $.errorMessage(status);
