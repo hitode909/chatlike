@@ -68,15 +68,22 @@ jQuery.extend({
                 setTimeout(getMessage, 1000);
                 return;
             }
+            // XXX: failback
             $.getJSON('/api/get',
-                {key: key},
+                {session: key, timeout: 30},
                 function(res) {
-                    if (res.data) {
-                        $.receiveChatMessage(res.data);
+                    if (res.status == "ok") {
+                        if (res.data) {
+                            $.receiveChatMessage(res.data);
+                        } else {
+                            $.message("no message" + new Date());
+                        }
                     } else {
-                        $.message("no message" + new Date());
+                        $.each(res.error, function() {
+                            $.errorMessage(this.toString());
+                        });
                     }
-                    setTimeout(getMessage, 1000);
+                    getMessage();
                 });
         };
         getMessage();
