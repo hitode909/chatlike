@@ -10,6 +10,7 @@ describe MainController do
     delete_test_db
     Messager.register('a', 'a')
     Messager.register('b', 'b')
+    Messager.register('c', 'c')
   end
 
   should 'can register' do
@@ -129,7 +130,28 @@ describe MainController do
     json(last_response.body)["data"].should == nil
   end
 
-  should 'can post or get with channel'
+  should 'can post or get with channel' do
+    post('/api/login', :name => 'a', :password => 'a', :channel => "cool")
+    session_a = json(last_response.body)["data"]
+
+    post('/api/login', :name => 'b', :password => 'b', :channel => "cool")
+    session_b = json(last_response.body)["data"]
+
+    post('/api/login', :name => 'c', :password => 'c')
+    session_c = json(last_response.body)["data"]
+
+    post('/api/post', :body => "hi, cool", :session => session_a["random_key"])
+    get('/api/get', :session => session_b["random_key"])
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"]["body"].should == "hi, cool"
+    json(last_response.body)["data"]["author"].should == "a"
+    json(last_response.body)["data"]["receiver"].should == nil
+    json(last_response.body)["data"]["channel"].should == "cool"
+
+    get('/api/get', :session => session_c["random_key"])
+    json(last_response.body)["status"].should == "ok"
+    json(last_response.body)["data"].should == nil
+  end
 
   should 'can post or get with receiver'
 

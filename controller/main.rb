@@ -29,14 +29,14 @@ class ApiController < JsonController
   def get
     return unless request.get? and check_session
     m = @session.receive_message
-    data(m) rescue { }
+    m ? data(m) : { }
   rescue => e
     raised_error(e)
   end
 
   def post
     return unless request.post? and check_session and check_request(:body)
-    data(@session.post_message(request[:body]))
+    data(@session.post_message_to_channel(request[:body]))
   rescue => e
     raised_error(e)
   end

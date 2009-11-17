@@ -14,7 +14,7 @@ module Messager
     def login name, password, channel = nil
       u = User.find(:name => name, :password => password)
       raise UserNotFound unless u
-      u.create_session channel
+      u.create_session(channel)
     end
 
     def logout key
