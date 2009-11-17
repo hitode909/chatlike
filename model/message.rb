@@ -27,7 +27,8 @@ module Messager
         :author => self.author.name,
         :receiver => self.receiver ? self.receiver.name : nil,
         :channel => self.channel ? self.channel.name : nil,
-        :created_at => self.created_at
+        :created_at => self.created_at,
+        :is_system => self.is_system
       }
     end
   end

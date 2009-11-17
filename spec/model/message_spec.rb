@@ -44,6 +44,7 @@ describe Messager::Message do
     @m_br.to_hash[:author].should == 'user_a'
     @m_us.to_hash[:receiver].should == 'user_b'
     @m_ch.to_hash[:channel].should == 'japan'
+    @m_ch.to_hash[:is_system].should be_false
   end
 
   it 'can be system message' do
