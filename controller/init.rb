@@ -9,13 +9,8 @@ end
 require 'json'
 class JsonController < Controller
   provide(:html, :type => 'application/json'){|a,s|
-    unless s.respond_to? :to_hash
-      s = {
-        :data => s,
-      }
-    end
     s[:status] = "ok" unless s.has_key? :status
-    s.to_hash.to_json
+    s.to_json
   }
 
   private

@@ -78,6 +78,6 @@ class ApiController < JsonController
     return unless request.get? and check_session
     channel = (request[:channel] && Messager::Channel.find(:name => request[:channel])) || @session.channel || nil
     return raised_error(RuntimeError.new("ChannelNotFound")) unless channel
-    return channel.sessions.map{ |s| s.user.name}
+    return { :data => channel.sessions.map{ |s| s.user.name} }
   end
 end
