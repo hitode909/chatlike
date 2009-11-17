@@ -73,7 +73,8 @@ module Messager
         :author => self.user,
         :author_session => self,
         :channel => self.channel,
-        :is_system => true
+        :is_system => true,
+        :loopback => true
       )
       Message.create(option)
     end
@@ -95,7 +96,7 @@ module Messager
         ).filter!(:id > self.last_fetched
         ).filter!({:loopback => true} | ({:loopback => false} & ~{:author_session_id => self.id})
         ).order!(:id.asc)
-      query.filter!(:created_at > self.created_at) unless all
+      query.filter!(:created_at >= self.created_at) unless all
       m = query.first
       if m
         self.last_fetched = m.id
