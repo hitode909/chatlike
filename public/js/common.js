@@ -31,6 +31,7 @@ jQuery.extend({
                         $("#main").show();
                         $.newSession(res.data);
                         $.startPolling();
+                        $.getMembers();
                     } else {
                         $.each(res.error, function() {
                             $.errorMessage(this.toString());
@@ -59,6 +60,18 @@ jQuery.extend({
                 }
             });
             return false;
+        });
+    },
+    getMembers: function() {
+        $.ajax({
+            type: "get",
+            url: "/api/members",
+            data: {session: $.session.random_key},
+            dataType: 'json',
+            success: function(res) {
+                console.log(res.data);
+                $("#main #members").text(res.data.join(", "));
+            }
         });
     },
     startPolling: function() {
