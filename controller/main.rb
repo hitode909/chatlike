@@ -1,4 +1,6 @@
 # -*- coding: nil -*-
+require 'timeout'
+
 class MainController < Controller
   def index
     @title = "Chat"
@@ -29,19 +31,23 @@ class ApiController < JsonController
   def get
     return unless request.get? and check_session
     from = Time.now
-    timeout = request[:timeout].to_i rescue nil
-    loop do
+    timeout_sec = request[:timeout] ? request[:timeout].to_i : nil rescue nil
+    timeout_sec = 30 if timeout_sec and not (0..60).include?(timeout_sec)
+    unless timeout_sec
       m = @session.receive_message
-      if m
-        return data(m)
-      else
-        if timeout and from + timeout > Time.now
-          sleep 0.5
-          redo
-        else
-          return { }
+      return m ? data(m) : { }
+    end
+
+    begin
+      timeout(timeout_sec) do
+        loop do
+          m = @session.receive_message
+          return data(m) if m
+          sleep 0.1
         end
       end
+    rescue Timeout::Error
+      return { }
     end
   rescue => e
     raised_error(e)
