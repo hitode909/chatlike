@@ -20,9 +20,7 @@ jQuery.extend({
         var found = false;
         $.each(sessions, function() {
             var name = this.toString();
-            console.log(name);
             var li = $("<li>");
-            console.log([name, $.session.user_name]);
             if (!found && name == $.session.user_name) {
                 li.append($("<strong>").text(name));
                 found = true;
