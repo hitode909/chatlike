@@ -15,6 +15,7 @@ class ApiController < JsonController
     rescue(Messager::DupricateUser) => e
       return raised_error(e)
     end
+    session.post_system_message_to_channel("registered")
     {:session => session.to_hash}
   end
 
@@ -25,11 +26,13 @@ class ApiController < JsonController
     rescue(Messager::UserNotFound) => e
       return raised_error(e)
     end
+    session.post_system_message_to_channel("logged in")
     {:session => session.to_hash}
   end
 
   def logout
     return unless request.post? and check_session
+    @session.post_system_message_to_channel("logged out")
     @session.kill
     {:session => @session.to_hash}
   rescue => e
@@ -49,8 +52,14 @@ class ApiController < JsonController
     begin
       timeout(timeout_sec) do
         loop do
-          m = @session.receive_message
-          return {:message => m.to_hash} if m
+          message = @session.receive_message
+          if message
+            hash = {:message =>m.to_hash }
+            if message.is_system and @session.channel
+              hash[:sessions] = @session.channel.sessions.map{ |s| s.user.name }
+            end
+            return hash
+          end
           sleep 0.1
         end
       end
