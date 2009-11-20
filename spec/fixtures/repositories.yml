@@ -1,0 +1,5 @@
+hello_world:
+  path: hello_world
+  name: Hello, World
+  author: a
+  is_valid: true
