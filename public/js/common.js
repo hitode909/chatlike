@@ -111,7 +111,7 @@ jQuery.extend({
     getSessions: function() {
         $.ajax({
             type: "get",
-            url: "/api/sessions",
+            url: "/api/session/sessions",
             data: {session: $.session.random_key},
             dataType: 'json',
             cache: false,
@@ -136,9 +136,10 @@ jQuery.extend({
             // XXX: failback
             $.ajax({
                 type: 'get',
-                url: '/api/get',
+                url: '/api/session/get',
                 data: {session: key, timeout: 60},
                 dataType: 'json',
+                timeout: 40 * 1000,
                 cache: false,
                 success: function(res) {
                     if (res.status == "ok") {
