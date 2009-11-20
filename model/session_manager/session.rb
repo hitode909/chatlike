@@ -1,6 +1,6 @@
 require 'securerandom'
 
-module Messager
+module SessionManager
   class SessionNotFound < Exception;end
   class Session < Sequel::Model
     set_schema do
@@ -96,7 +96,7 @@ module Messager
     end
 
     def receive_message(all = false)
-      query = Messager::Message.filter(:channel_id => self.channel_id, :receiver_id => self.user_id)
+      query = SessionManager::Message.filter(:channel_id => self.channel_id, :receiver_id => self.user_id)
       query.or!(:channel_id => self.channel_id, :receiver_id => nil) if self.channel_id
       query.or!(:channel_id => nil, :receiver_id => nil
         ).filter!(:id > self.last_fetched

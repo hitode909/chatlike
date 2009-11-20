@@ -22,7 +22,7 @@ class JsonController < Controller
 
   def check_session
     raise "SessionRequired" unless request[:session]
-    @session = Messager.session(request[:session])
+    @session = SessionManager.session(request[:session])
     raise "InvalidSession" unless @session
     @session.update_expire
     @session.save

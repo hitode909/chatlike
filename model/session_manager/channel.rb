@@ -1,4 +1,4 @@
-module Messager
+module SessionManager
   class Channel < Sequel::Model
     set_schema do
       primary_key :id

@@ -8,13 +8,13 @@ describe MainController do
 
   before do
     delete_test_db
-    @session_a = Messager.register('a', 'a')
-    @session_b = Messager.register('b', 'b')
-    @session_c = Messager.register('c', 'c')
-    @session_a_cool = Messager.login('a', 'a', 'cool')
-    @session_b_cool = Messager.login('b', 'b', 'cool')
-    @session_c_cool = Messager.login('c', 'c', 'cool')
-    @session_a_hot =  Messager.login('a', 'a', 'hot')
+    @session_a = SessionManager.register('a', 'a')
+    @session_b = SessionManager.register('b', 'b')
+    @session_c = SessionManager.register('c', 'c')
+    @session_a_cool = SessionManager.login('a', 'a', 'cool')
+    @session_b_cool = SessionManager.login('b', 'b', 'cool')
+    @session_c_cool = SessionManager.login('c', 'c', 'cool')
+    @session_a_hot =  SessionManager.login('a', 'a', 'hot')
   end
 
   should 'can register' do

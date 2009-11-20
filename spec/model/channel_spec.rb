@@ -2,20 +2,20 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/../model_helper'
 
-describe Messager::Channel do
-  include Messager
+describe SessionManager::Channel do
+  include SessionManager
   before do
-    load("messager/session")
-    @ch_jp = load("messager/channel__japan")
-    @ch_eu = load("messager/channel__euro")
-    @session_a_ch_jp = load("messager/session__a_ch_jp")
-    @session_b_ch_jp = load("messager/session__b_ch_jp")
-    @user_a = load("messager/user__a")
-    @user_b = load("messager/user__b")
+    load("session_manager/session")
+    @ch_jp = load("session_manager/channel__japan")
+    @ch_eu = load("session_manager/channel__euro")
+    @session_a_ch_jp = load("session_manager/session__a_ch_jp")
+    @session_b_ch_jp = load("session_manager/session__b_ch_jp")
+    @user_a = load("session_manager/user__a")
+    @user_b = load("session_manager/user__b")
   end
 
   it 'has user class' do
-    @ch_jp.should be_an_instance_of Messager::Channel
+    @ch_jp.should be_an_instance_of SessionManager::Channel
   end
 
   it 'has columns' do
