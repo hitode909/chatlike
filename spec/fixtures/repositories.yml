@@ -2,4 +2,13 @@ hello_world:
   path: hello_world
   name: Hello, World
   author: a
-  is_valid: true
+hello_world_child1:
+  path: hello_world_child1
+  name: Hello, World
+  author: a
+  parent: hello_world
+hello_world_child2:
+  path: hello_world_child2
+  name: Hello, World
+  author: a
+  parent: hello_world

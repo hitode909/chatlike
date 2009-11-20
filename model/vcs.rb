@@ -6,7 +6,6 @@ module Vcs
       String :name
       foreign_key :author_id, :null => false
       foreign_key :parent_id
-      Boolean :is_valid, :null => false, :default => false
       datetime :created_at
     end
     many_to_one :author, :class => Messager::User
@@ -17,11 +16,10 @@ module Vcs
       self.created_at = Time.now
     end
 
-    def is_valid
-      self.values[:is_valid]
-    end
-
     def files
+      `svnlook tree #{self.global_path}`.split("\n").map{ |path|
+        Repository::File.new(self, path.strip)
+      }
     end
 
     def global_path
@@ -30,15 +28,24 @@ module Vcs
   end
 
   class Repository::File
-    def initialize()
-    end
-    def path
+    attr_reader :repository, :path
+    def initialize(repository, path)
+      @repository, @path = repository, path
     end
 
     def read
-      # svnlook
+      raise Errno::EISDIR, self.path if self.directory?
+      `svnlook cat #{self.repository.global_path} #{path}`
+    end
+
+    def file?
+      not self.directory?
+    end
+
+    def directory?
+      !!(self.path.strip =~ /\/$/)
     end
   end
 
-  GLOBAL_PATH = "./"
+  GLOBAL_PATH = "./svn/"
 end
