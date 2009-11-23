@@ -90,3 +90,15 @@ body {
     cursor: pointer;
     text-decoration: underline;
 }
+
+#repository-about dt {
+    display: inline;
+    margin-left: 1em;
+    margin-right: 0em;
+    font-weight: bold;
+}
+#repository-about dd {
+    display: inline;
+    margin-left: 0.5em;
+    margin-right: 0em;
+}

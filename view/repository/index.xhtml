@@ -1,12 +1,14 @@
 <h1>#{h @repos.path}</h1>
-<h2>About</h2>
-<dl>
-  <dt>path</dt><dd>#{h @repos.path}</dd>
-  <dt>name</dt><dd>#{h @repos.name}</dd>
-  <dt>author</dt><dd>#{h @repos.author.name}</dd>
-  <dt>parent</dt><dd>#{h @repos.parent ? @repos.parent.path : "no"}</dd>
-  <dt>created_at</dt><dd>#{h @repos.created_at}</dd>
-</dl>
+<div id="repository-about">
+  <h2>About</h2>
+  <dl>
+    <dt>path</dt><dd>#{h @repos.path}</dd>
+    <dt>name</dt><dd>#{h @repos.name}</dd>
+    <dt>author</dt><dd>#{h @repos.author.name}</dd>
+    <dt>parent</dt><dd>#{h @repos.parent ? @repos.parent.path : "no"}</dd>
+    <dt>created_at</dt><dd>#{h @repos.created_at}</dd>
+  </dl>
+</div>
 
 <h2>Action</h2>
 <span class="action embed">Embed</span>
