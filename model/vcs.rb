@@ -39,7 +39,7 @@ module Vcs
         end
 
         depth = path.scan(/^ */).first.length
-        while last.depth > depth
+        while last.depth >= depth
           last = last.parent
         end
         last.push(path.strip!)
