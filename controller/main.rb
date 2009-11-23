@@ -3,7 +3,7 @@ require 'timeout'
 
 class MainController < Controller
   def index
-    @title = "Chat"
+    @title = "Index"
   end
 
   def register
