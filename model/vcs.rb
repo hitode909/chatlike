@@ -97,17 +97,23 @@ module Vcs
     def fork(user)
       already = Repository.find(:author_id => user.id, :name => self.name)
       raise 'DupricateRepository' if already
-      new = Repository.create(
-        :author_id => user.id,
-        :name => self.name,
-        :parent => self
-        )
-      puts "mkdir -p #{new.user_path}"
-      system "mkdir -p #{new.user_path}"
-      puts "cp -r #{self.inner_path} #{new.user_path}"
-      system "cp -r #{self.inner_path} #{new.user_path}"
-      new.write_passwd
-      new
+      begin
+        new = Repository.create(
+          :author_id => user.id,
+          :name => self.name,
+          :parent => self
+          )
+        puts "mkdir -p #{new.user_path}"
+        system "mkdir -p #{new.user_path}"
+        puts "cp -r #{self.inner_path} #{new.user_path}"
+        system "cp -r #{self.inner_path} #{new.user_path}"
+        new.write_passwd
+        new
+      rescue => e
+        system "rm -rf #{new.inner_path}"
+        new.delete
+        e
+      end
     end
   end
 
