@@ -120,5 +120,9 @@ module SessionManager
       end
       m
     end
+
+    def has_repository?(repos)
+      !!Vcs::Repository.find(:author_id => self.user.id, :name => repos.name)
+    end
   end
 end

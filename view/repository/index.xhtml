@@ -13,8 +13,8 @@
 <div id="repository-action">
 <h2>Action</h2>
 <span class="action embed">Embed</span>
-<span class="action checkout">Checkout</span>
-<span class="action fork">Fork</span>
+<?r if @session ?><span class="action checkout">Checkout</span><?r end ?>
+<?r if @session and not @session.has_repository?(@repos) ?><span class="action fork">Fork</span><?r end ?>
 </div>
 
 <h2>Tree</h2>
