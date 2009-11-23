@@ -68,6 +68,21 @@ module Vcs
         :created_at => self.created_at
       }
     end
+
+    def fork(user)
+      already = Repository.find(:author_id => user.id, :name => self.name)
+      raise 'DupricateRepository' if already
+      new = Repository.create(
+        :author_id => user.id,
+        :name => self.name,
+        :parent => self
+        )
+      puts "mkdir -p #{new.global_path}"
+      system "mkdir -p #{new.global_path}"
+      puts "cp -r #{self.global_path} #{new.global_path}"
+      system "cp -r #{self.global_path} #{new.global_path}"
+      new
+    end
   end
 
   class Repository::Entity

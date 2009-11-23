@@ -10,5 +10,19 @@ module Api
         )
       { :status => 'ok' }
     end
-  end
+
+    def fork
+      return unless request.post? and check_session and check_repository(request[:repository])
+      new_repository = @repository.fork(@session.user)
+      @session.post_json_message({
+          :type => 'checkout',
+          :repository => new_repository.to_hash
+        },
+        :receiver => @session.user
+        )
+      { :status => 'ok',
+        :repository => new_repository.to_hash
+      }
+    end
+end
 end
