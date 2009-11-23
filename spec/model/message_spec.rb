@@ -6,7 +6,7 @@ describe SessionManager::Message do
   before do
     @user_a = load("session_manager/user__a")
     @session_a = load("session_manager/session__a")
-    @m_br, @m_br_sys, @m_us, @m_ch = * load(%w{ session_manager/message__broadcast session_manager/message__broadcast_system session_manager/message__to_user_b session_manager/message__to_channel_japan})
+    @m_br, @m_br_sys, @m_us, @m_ch, @m_json = * load(%w{ session_manager/message__broadcast session_manager/message__broadcast_system session_manager/message__to_user_b session_manager/message__to_channel_japan session_manager/message__json})
   end
 
   it 'has user class' do
@@ -50,6 +50,12 @@ describe SessionManager::Message do
   it 'can be system message' do
     @m_br.is_system.should be_false
     @m_br_sys.is_system.should be_true
+  end
+
+  it 'can be json message' do
+    @m_br.is_json.should be_false
+    @m_json.is_json.should be_true
+    @m_json.body.should == { 'key' => 'value'}
   end
 
 end

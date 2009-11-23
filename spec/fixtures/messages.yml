@@ -17,3 +17,8 @@ to_channel_japan:
   author_session: a
   channel: japan
   body: channel
+json:
+  author: a
+  author_session: a
+  body: '{"key": "value"}'
+  is_json: true

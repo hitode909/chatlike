@@ -1,3 +1,5 @@
+require 'json'
+
 module SessionManager
   class Message < Sequel::Model
     set_schema do
@@ -9,6 +11,7 @@ module SessionManager
       foreign_key :channel_id
       Boolean :loopback, :null => false, :default => false
       Boolean :is_system, :null => false, :default => false
+      Boolean :is_json, :null => false, :default => false
       datetime :created_at
     end
     many_to_one :author, :class => User
@@ -16,6 +19,10 @@ module SessionManager
     many_to_one :receiver, :class => User
     many_to_one :channel
     create_table unless table_exists?
+
+    def body
+       self.is_json ? JSON.load(self.values[:body]) : self.values[:body]
+     end
 
     def before_create
       self.created_at = Time.now

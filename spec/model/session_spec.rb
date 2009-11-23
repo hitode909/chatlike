@@ -107,6 +107,15 @@ describe SessionManager::Session do
     m.receiver.should be_nil
   end
 
+  it 'post json message to channel' do
+    @ch_jp = load("session_manager/channel__japan")
+    m = @session_a_ch_jp.post_json_message({ :a => 'message_a'})
+    m.should be_an_instance_of SessionManager::Message
+    m.body.should == { "a" => 'message_a'}
+    m.channel.should == nil
+    m.receiver.should be_nil
+  end
+
   it 'post system message to channel' do
     @ch_jp = load("session_manager/channel__japan")
     m = @session_a_ch_jp.post_system_message_to_channel 'sys'

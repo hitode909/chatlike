@@ -63,6 +63,16 @@ module SessionManager
       Message.create(option)
     end
 
+    def post_json_message(body, option = { })
+      option.update(
+        :body => body.to_json,
+        :author => self.user,
+        :author_session => self,
+        :is_json => true
+      )
+      Message.create(option)
+    end
+
     def post_message_to_channel(body, option = { })
       option.update(
         :body => body,
