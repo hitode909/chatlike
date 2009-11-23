@@ -1,8 +1,8 @@
 require 'securerandom'
 
 module SessionManager
-  class DupricateUser < Exception;end
-  class UserNotFound < Exception;end
+  class DupricateUser < RuntimeError;end
+  class UserNotFound < RuntimeError;end
   class User < Sequel::Model
     set_schema do
       primary_key :id

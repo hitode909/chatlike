@@ -28,6 +28,10 @@ module SessionManager
       Session.find({:random_key => key} & (:expire_at > Time.now))
     end
 
+    def user key
+      User.find(:random_key => key)
+    end
+
     def get
     end
 
