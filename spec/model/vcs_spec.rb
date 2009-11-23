@@ -96,3 +96,26 @@ describe Vcs::Repository::Directory do
     res.should == @mydir.files.map{ |f| f.path }
   end
 end
+
+describe Vcs::Repository::File do
+  before do
+    @parent = Vcs::Repository::Directory.new('parent')
+    @file = Vcs::Repository::File.new('myfile')
+    @parent.push(@file)
+  end
+
+  it 'is file' do
+    @file.file?.should be_true
+    @file.directory?.should be_false
+  end
+
+  it 'has node_path' do
+    @file.node_path.should == 'myfile'
+  end
+
+  it 'has path' do
+    @file.path.should == 'parent/myfile'
+  end
+
+  # it 'can read'
+end
