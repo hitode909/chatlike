@@ -16,9 +16,17 @@ module Vcs
       self.created_at = Time.now
     end
 
+    def entities
+      unless @root
+        self.root
+      end
+      @entities
+    end
+
     # XXX: need more test
     def root
       return @root if @root
+      @entities = []
       root = nil
       last = nil
       `svnlook tree #{self.global_path}`.split("\n").each{ |path|
@@ -26,6 +34,7 @@ module Vcs
           root = Vcs::Repository::Directory.new('/')
           root.repository = self
           last = root
+          @entities.push(last)
           next
         end
 
@@ -34,7 +43,8 @@ module Vcs
           last = last.parent
         end
         last.push(path.strip!)
-        last = last.files.last
+        last = last.last
+        @entities.push(last)
       }
       @root = root
     end

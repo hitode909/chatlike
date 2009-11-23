@@ -1,0 +1,16 @@
+<h1>#{h @repos.path}</h1>
+<h2>About</h2>
+<dl>
+  <dt>path</dt><dd>#{h @repos.path}</dd>
+  <dt>name</dt><dd>#{h @repos.name}</dd>
+  <dt>author</dt><dd>#{h @repos.author.name}</dd>
+  <dt>parent</dt><dd>#{h @repos.parent ? @repos.parent.path : "no"}</dd>
+  <dt>created_at</dt><dd>#{h @repos.created_at}</dd>
+</dl>
+
+<h2>Tree</h2>
+<table>
+  <?r @repos.entities.each{ |e| ?>
+  <tr><td>#{h e.path }</td></tr>
+  <?r } ?>
+</table>
