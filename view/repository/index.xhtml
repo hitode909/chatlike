@@ -2,10 +2,7 @@
 <div id="repository-about">
   <h2>About</h2>
   <dl>
-    <dt>path</dt><dd>#{h @repos.path}</dd>
-    <dt>name</dt><dd>#{h @repos.name}</dd>
-    <dt>author</dt><dd>#{h @repos.author.name}</dd>
-    <dt>parent</dt><dd>#{h @repos.parent ? @repos.parent.path : "no"}</dd>
+    <?r if @repos.parent ?><dt>parent</dt><dd><a href="#{h @repos.parent.web_path}">#{h @repos.parent.path}</a></dd><?r end ?>
     <dt>created_at</dt><dd>#{h @repos.created_at}</dd>
   </dl>
 </div>
