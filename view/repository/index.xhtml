@@ -8,6 +8,10 @@
   <dt>created_at</dt><dd>#{h @repos.created_at}</dd>
 </dl>
 
+<h2>Action</h2>
+<span class="action checkout">Checkout</span>
+<span class="action fork">Fork</span>
+
 <h2>Tree</h2>
 <table>
   <?r @repos.entities.each{ |e| ?>
@@ -18,6 +22,3 @@
   <?r } ?>
 </table>
 
-<h2>Action</h2>
-<span class="action checkout">Checkout</span>
-<span class="action fork">Fork</span>
