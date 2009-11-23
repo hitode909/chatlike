@@ -27,3 +27,8 @@
   <?r } ?>
 </table>
 
+<script type="text/javascript">
+  $.extend({
+    repository: #{@repos.to_hash.to_json}
+  });
+</script>

@@ -12,7 +12,7 @@
         <input type="submit" value="Logout" />
       </form>
       <?r else ?>
-      #{ anchor("Login", "/login", {:redirect => request.env["REQUEST_URI"] })}
+      #{ anchor("Login", "//login", {:redirect => request.env["REQUEST_URI"] })}
       #{ anchor("Register", "/register", {:redirect => request.env["REQUEST_URI"] })}
       <?r end ?>
     </div>

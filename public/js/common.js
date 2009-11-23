@@ -183,7 +183,7 @@ $(function() {
       });
 
       $("#repository-action .checkout").click(function() {
-          $(this).text("Checkout (not implemented)");
+          $.post('/api/repository/checkout', {repository: $.repository.path}, function(re) {console.log(re);});
       });
 
       $("#repository-action .fork").click(function() {

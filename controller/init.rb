@@ -29,13 +29,20 @@ class JsonController < Controller
   end
 
   def check_session
-    raise "SessionRequired" unless request[:session]
-    @session = SessionManager.session(request[:session])
+    raise "SessionRequired" unless request[:session] || session[:session_key]
     raise "InvalidSession" unless @session
     @session.update_expire
     @session.save
     true
   end
+
+  def check_repository(path)
+    raise "RepositoryRequired" unless path
+    @repository = Vcs::Repository.find(:path => path)
+    raise "InvalidRepository" unless @repository
+    true
+  end
+
   def raised_error(*errors)
     { :status => "ng",
       :errors => errors.map{ |e| e.message.split("::").last}
@@ -54,3 +61,4 @@ end
 require __DIR__('main')
 require __DIR__('repository')
 require __DIR__('api/session')
+require __DIR__('api/repository')

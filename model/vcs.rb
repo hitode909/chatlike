@@ -56,6 +56,16 @@ module Vcs
     def global_path
       ::File.join(Vcs::GLOBAL_PATH, self.path)
     end
+
+    def to_hash
+      {
+        :path => self.path,
+        :global_path => 'svn://localhost/' + self.path,
+        :name => self.name,
+        :author => self.author.name,
+        :created_at => self.created_at
+      }
+    end
   end
 
   class Repository::Entity
