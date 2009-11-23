@@ -11,6 +11,8 @@
 <h2>Tree</h2>
 <table>
   <?r @repos.entities.each{ |e| ?>
-  <tr><td>#{h e.path }</td></tr>
+  <tr><td><dif>#{h e.path }</div>
+<div><?r if e.file? ?><pre class="source-code" >#{h e.read }</pre><?r end ?></div>
+</td></tr>
   <?r } ?>
 </table>

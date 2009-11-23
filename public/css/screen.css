@@ -66,3 +66,9 @@ body {
     font-size: 80%;
     color: #333;
 }
+
+.source-code {
+    padding: 0.5em;
+    font-size: 80%;
+    background: #fff;
+}
