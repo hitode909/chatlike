@@ -12,8 +12,8 @@
         <input type="submit" value="Logout" />
       </form>
       <?r else ?>
-      #{ anchor("Login", "//login", {:redirect => request.env["REQUEST_URI"] })}
-      #{ anchor("Register", "/register", {:redirect => request.env["REQUEST_URI"] })}
+      <a href="/login">Login</a>
+      <a href="/register">Login</a>
       <?r end ?>
     </div>
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
