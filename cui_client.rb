@@ -6,7 +6,7 @@ require "json"
 require 'open-uri'
 
 res = Net::HTTP.post_form(URI.parse('http://localhost:7000/api/session/login'),
-  {:name => ARGV.shift, :password => ARGV.shift, :channel => ARGV.shift})
+  {:name => ARGV.shift, :password => ARGV.shift})
 session = JSON.parse res.body
 pp session
 

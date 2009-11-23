@@ -2,11 +2,12 @@ module Api
   class RepositoryController < JsonController
     def checkout
       return unless request.post? and check_session and check_repository(request[:repository])
-      @session.post_json(
-        {
+      @session.post_json_message({
           :type => 'checkout',
           :repository => @repository.to_hash
-        }.to_json)
+        },
+        :receiver => @session.user
+        )
       { :status => 'ok' }
     end
   end

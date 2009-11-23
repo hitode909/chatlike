@@ -183,7 +183,7 @@ $(function() {
       });
 
       $("#repository-action .checkout").click(function() {
-          $.post('/api/repository/checkout', {repository: $.repository.path}, function(re) {console.log(re);});
+          $.post('/api/repository/checkout', {repository: $.repository.path});
       });
 
       $("#repository-action .fork").click(function() {
