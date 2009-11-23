@@ -52,4 +52,5 @@ end
 
 # Here go your requires for subclasses of Controller:
 require __DIR__('main')
+require __DIR__('repository')
 require __DIR__('api/session')
