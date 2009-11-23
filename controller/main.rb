@@ -6,4 +6,3 @@ class MainController < Controller
     @title = "Chat"
   end
 end
-
