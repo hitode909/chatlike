@@ -38,7 +38,7 @@ class MainController < Controller
 
   def logout
     @errors = []
-    return unless request.post? and @user and @session
+    return unless request.post? and @session
 
     begin
       s = SessionManager.logout(@session.random_key)
