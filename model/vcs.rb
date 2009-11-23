@@ -59,6 +59,10 @@ module Vcs
       ::File.join(Vcs::INNER_ROOT, self.path)
     end
 
+    def user_path
+      ::File.join(Vcs::INNER_ROOT, self.author.name)
+    end
+
     def web_path
       Vcs::WEB_ROOT + 'repository/' + self.path
     end
@@ -78,6 +82,18 @@ module Vcs
       }
     end
 
+    def write_passwd
+      ::File.open(::File.join(self.inner_path, '/conf/passwd'), 'w') { |f|
+        f.puts "[users]"
+        f.puts "#{self.author.name} = #{self.author.password}"
+      }
+      ::File.open(::File.join(self.inner_path, '/conf/svnserve.conf'), 'w') { |f|
+        f.puts "[general]"
+        f.puts "anon-access = read"
+        f.puts "password-db = passwd"
+      }
+    end
+
     def fork(user)
       already = Repository.find(:author_id => user.id, :name => self.name)
       raise 'DupricateRepository' if already
@@ -86,10 +102,11 @@ module Vcs
         :name => self.name,
         :parent => self
         )
-      puts "mkdir -p #{new.inner_path}"
-      system "mkdir -p #{new.inner_path}"
-      puts "cp -r #{self.inner_path} #{new.inner_path}"
-      system "cp -r #{self.inner_path} #{new.inner_path}"
+      puts "mkdir -p #{new.user_path}"
+      system "mkdir -p #{new.user_path}"
+      puts "cp -r #{self.inner_path} #{new.user_path}"
+      system "cp -r #{self.inner_path} #{new.user_path}"
+      new.write_passwd
       new
     end
   end
