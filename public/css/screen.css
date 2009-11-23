@@ -7,6 +7,10 @@ body {
   background: #ccf;
 }
 
+#user-session {
+    float: right;
+}
+
 #content {
   margin: 1em;
   background: #eef;
