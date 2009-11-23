@@ -6,6 +6,7 @@ class Controller < Ramaze::Controller
   engine :Etanni
 
   before_all do
+    response.header['Cache-Control'] = 'no-store'
     unless @user or @session
       session_key = request[:session] || session[:session_key]
       @session = SessionManager.session(session_key) if session_key
