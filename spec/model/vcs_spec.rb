@@ -40,32 +40,31 @@ describe Vcs do
     @child1.children.should be_empty
   end
 
-=begin
   it 'has files' do
-    files = @hello.files
-    files.should_not be_empty
-    files.first.should be_an_instance_of Vcs::Repository::File
-    files[0].path.should == "/"
-    files[0].directory?.should be_true
-    files[0].file?.should be_false
-    lambda{ files[0].read }.should raise_error(Errno::EISDIR)
+    root = @hello.root
+    root.should be_an_instance_of Vcs::Repository::Directory
+    root.should_not be_empty
+    root.path.should == "/"
+    lambda{ root.read }.should raise_error(Errno::EISDIR)
+    root.directory?.should be_true
+    root.file?.should be_false
 
-    files[1].path.should == "hello_world.c"
-    files[1].directory?.should be_false
-    files[1].file?.should be_true
-    files[1].read.should =~ /Hello, World/
+    root.first.should be_an_instance_of Vcs::Repository::File
+    root.first.file?.should be_true
+    root.first.directory?.should be_false
+    root.first.node_path.should == "hello_world.c"
+    root.first.path.should == "/hello_world.c"
+    root.first.read.should =~ /Hello, World/
   end
-=end
 
 end
 
 describe Vcs::Repository::Directory do
   before do
     @mydir = Vcs::Repository::Directory.new('mydir')
-    @c1 = Vcs::Repository::Directory.new('child1')
-    @c2 = Vcs::Repository::Directory.new('child2')
-    @mydir.push(@c1)
-    @mydir.push(@c2)
+    @mydir.push('child1')
+    @mydir.push('child2')
+    @c1, @c2 = *@mydir.files
   end
 
   it 'is directory' do
@@ -100,8 +99,8 @@ end
 describe Vcs::Repository::File do
   before do
     @parent = Vcs::Repository::Directory.new('parent')
-    @file = Vcs::Repository::File.new('myfile')
-    @parent.push(@file)
+    @parent.push('myfile')
+    @file = @parent.last
   end
 
   it 'is file' do

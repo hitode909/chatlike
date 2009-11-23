@@ -16,11 +16,31 @@ module Vcs
       self.created_at = Time.now
     end
 
-    def files
-      # directory will apear as indent
-      `svnlook tree #{self.global_path}`.split("\n").map{ |path|
-        Repository::File.new(self, path.strip)
+    # XXX: need more test
+    def root
+      return @root if @root
+      root = nil
+      last = nil
+      `svnlook tree #{self.global_path}`.split("\n").each{ |path|
+        unless last
+          root = Vcs::Repository::Directory.new('/')
+          root.repository = self
+          last = root
+          next
+        end
+
+        depth = path.scan(/^ */).first.length
+        while last.depth > depth
+          last = last.parent
+        end
+        last.push(path.strip!)
+        last = last.files.last
       }
+      @root = root
+    end
+
+    def clear_cache
+      @root = nil
     end
 
     def global_path
@@ -29,8 +49,9 @@ module Vcs
   end
 
   class Repository::Entity
-    attr_accessor :repository, :parent, :node_path
+    attr_accessor :repository, :parent, :node_path, :depth
     def initialize(node_path)
+      @depth = 0
       @node_path = node_path
     end
 
@@ -55,20 +76,30 @@ module Vcs
       true
     end
 
-     def each(&block)
-       self.files.each {|b|
-         yield(b)
-       }
-     end
-
-    def push(entity)
-      raise TypeError unless entity.kind_of? Vcs::Repository::Entity
+    def push(path)
+      if path =~ /\/$/
+        entity = Repository::Directory.new(path)
+      else
+        entity = Repository::File.new(path)
+      end
       self.files << entity
       entity.parent = self
+      entity.repository = self.repository
+      entity.depth = self.depth + 1
     end
 
     def file?
       false
+    end
+
+    def each(&block)
+      self.files.each {|b|
+        yield(b)
+      }
+    end
+
+    def method_missing(name, *args)
+      @files.__send__(name, *args)
     end
   end
 
