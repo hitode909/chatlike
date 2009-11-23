@@ -27,6 +27,13 @@
     <meta name="author" content="Max Mustermann" />
     <meta name="date" content="#{Time.now.iso8601}" />
     <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript">
+      <?r if @session ?>
+      $.extend({
+        session: #{@session.to_hash.to_json}
+      });
+      <?r end ?>
+    </script>
     <script type="text/javascript" src="/js/common.js"></script>
     #{css 'screen'}
   </head>
