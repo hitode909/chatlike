@@ -1,0 +1,12 @@
+<h2>Login</h2>
+<?r @errors.each { |e| ?>
+<p>#{ h e }</p>
+<?r } ?>
+<form class="login-form" method="post" action="/login">
+  <table>
+    <tr><th>Name</th><td><input type="text" size="15" name="name"></input></td></tr>
+    <tr><th>Password</th><td><input type="text" size="15" name="password"></input></td></tr>
+  </table>
+  <input type="submit" value="Login"></input>
+  <input type="hidden" name="channel" value="main"></input>
+</form>

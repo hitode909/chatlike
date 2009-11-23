@@ -1,0 +1,11 @@
+<?r @errors.each { |e| ?>
+<p>#{ h e }</p>
+<?r } ?>
+<form class="register-form" method="post" action="/register">
+  <table>
+    <tr><th>Name</th><td><input type="text" size="15" name="name"></input></td></tr>
+    <tr><th>Password</th><td><input type="text" size="15" name="password"></input></td></tr>
+  </table>
+  <input type="submit" value="Register"></input>
+  <input type="hidden" name="channel" value="main"></input>
+</form>
