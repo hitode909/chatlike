@@ -7,13 +7,8 @@ class Controller < Ramaze::Controller
 
   before_all do
     unless @user or @session
-      if session[:user_key]
-        @user = SessionManager.user(session[:user_key])
-      end
-      if @user
-        session_key = request[:session] || session[:session_key]
-        @session = SessionManager.session(session_key) if session_key
-      end
+      session_key = request[:session] || session[:session_key]
+      @session = SessionManager.session(session_key) if session_key
     end
   end
 end

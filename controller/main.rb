@@ -18,7 +18,6 @@ class MainController < Controller
       return
     end
     session[:session_key] = s.random_key
-    session[:user_key] = s.user.random_key
     @redirect = request[:redirect] || '/'
     response.body = render_file('view/redirect.xhtml', :redirect => request[:redirect] || '/')
   end
@@ -34,7 +33,6 @@ class MainController < Controller
       return
     end
     session[:session_key] = s.random_key
-    session[:user_key] = s.user.random_key
     response.body = render_file('view/redirect.xhtml', :redirect => request[:redirect] || '/')
   end
 
@@ -49,7 +47,6 @@ class MainController < Controller
       return
     end
     session.delete(:session_key)
-    session.delete(:user_key)
     response.body = render_file('view/redirect.xhtml', :redirect => request[:redirect] || '/')
   end
 end
