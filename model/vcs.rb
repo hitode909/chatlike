@@ -8,7 +8,7 @@ module Vcs
       foreign_key :parent_id
       datetime :created_at
     end
-    many_to_one :author, :class => Messager::User
+    many_to_one :author, :class => ::SessionManager::User
     many_to_one :parent, :class => Repository
     one_to_many :children, :class => Repository, :key => :parent_id
     create_table unless table_exists?

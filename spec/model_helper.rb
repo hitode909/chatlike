@@ -5,6 +5,6 @@ require 'fixture_dependencies/rspec/sequel'
 FixtureDependencies.fixture_path = File.dirname(__FILE__) + '/fixtures'
 
 # # XXX: ロードしてないとhas_manyのカウントが変になったりする……
-# ["messager/channel","messager/session","messager/user"].each {|s|
+# ["session_manager/channel","session_manager/session","session_manager/user"].each {|s|
 #   FixtureDependencies.load s
 # }

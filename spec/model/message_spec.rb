@@ -2,16 +2,16 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/../model_helper'
 
-describe Messager::Message do
+describe SessionManager::Message do
   before do
-    @user_a = load("messager/user__a")
-    @session_a = load("messager/session__a")
-    @m_br, @m_br_sys, @m_us, @m_ch = * load(%w{ messager/message__broadcast messager/message__broadcast_system messager/message__to_user_b messager/message__to_channel_japan})
+    @user_a = load("session_manager/user__a")
+    @session_a = load("session_manager/session__a")
+    @m_br, @m_br_sys, @m_us, @m_ch = * load(%w{ session_manager/message__broadcast session_manager/message__broadcast_system session_manager/message__to_user_b session_manager/message__to_channel_japan})
   end
 
   it 'has user class' do
-    @m_br.should be_an_instance_of Messager::Message
-    @user_a = load("messager/user__a")
+    @m_br.should be_an_instance_of SessionManager::Message
+    @user_a = load("session_manager/user__a")
   end
 
   it 'has body' do
@@ -27,13 +27,13 @@ describe Messager::Message do
 
   it 'may have receiver' do
     @m_br.receiver.should be_nil
-    @user_b = load("messager/user__b")
+    @user_b = load("session_manager/user__b")
     @m_us.receiver.should == @user_b
   end
 
   it 'may have channel' do
     @m_br.channel.should be_nil
-    @uch_jp = load("messager/channel__japan")
+    @uch_jp = load("session_manager/channel__japan")
     @m_ch.receiver.should == @ch_jp
   end
 

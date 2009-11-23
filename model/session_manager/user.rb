@@ -1,6 +1,6 @@
 require 'securerandom'
 
-module Messager
+module SessionManager
   class DupricateUser < Exception;end
   class UserNotFound < Exception;end
   class User < Sequel::Model

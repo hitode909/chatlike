@@ -10,9 +10,5 @@ else
   DB = Sequel.mysql 'chatlike', :user => 'nobody', :password => 'nobody', :host => 'localhost', :encoding => 'utf8'
 end
 
-require 'model/messager'
-require 'model/user'
-require 'model/session'
-require 'model/channel'
-require 'model/message'
+require 'model/session_manager'
 require 'model/vcs'

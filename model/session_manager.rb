@@ -1,6 +1,9 @@
-require 'digest/sha1'
+require 'model/session_manager/user'
+require 'model/session_manager/session'
+require 'model/session_manager/channel'
+require 'model/session_manager/message'
 
-module Messager
+module SessionManager
   class << self
     def register name, password, channel = nil
       begin

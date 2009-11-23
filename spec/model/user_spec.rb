@@ -2,18 +2,18 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/../model_helper'
 
-describe Messager::User do
-  include Messager
+describe SessionManager::User do
+  include SessionManager
   before do
-    load("messager/session")
+    load("session_manager/session")
 
-    @user_a = load("messager/user__a")
-    @user_b = load("messager/user__b")
-    @user_c = load("messager/user__c")
+    @user_a = load("session_manager/user__a")
+    @user_b = load("session_manager/user__b")
+    @user_c = load("session_manager/user__c")
   end
 
   it 'has user class' do
-    @user_a.should be_an_instance_of Messager::User
+    @user_a.should be_an_instance_of SessionManager::User
   end
 
   it 'has columns' do
@@ -31,7 +31,7 @@ describe Messager::User do
 
   it 'may has sessions' do
     @user_a.sessions.length.should > 0
-    new_user = Messager::User.create(:name => 'new', :password => 'none')
+    new_user = SessionManager::User.create(:name => 'new', :password => 'none')
     new_user.sessions.should be_empty
   end
 

@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/../model_helper'
 
 describe Vcs do
   before do
-     @user_a = load("messager/user__a")
+     @user_a = load("session_manager/user__a")
      @hello = load("vcs/repository__hello_world")
      @child1 = load("vcs/repository__hello_world_child1")
      @child2 = load("vcs/repository__hello_world_child2")

@@ -8,7 +8,7 @@
   <tr><td>
 <div id="register">
   <h2>Register</h2>
-  <form class="register-form" method="post" action="/api/register">
+  <form class="register-form" method="post" action="/api/session/register">
     <table>
       <tr><th>Name</th><td><input type="text" size="15" name="name"></input></td></tr>
       <tr><th>Password</th><td><input type="text" size="15" name="password"></input></td></tr>
@@ -20,7 +20,7 @@
 </td><td>
 <div id="login">
   <h2>Login</h2>
-  <form class="login-form" method="post" action="/api/login">
+  <form class="login-form" method="post" action="/api/session/login">
     <table>
       <tr><th>Name</th><td><input type="text" size="15" name="name"></input></td></tr>
       <tr><th>Password</th><td><input type="text" size="15" name="password"></input></td></tr>
@@ -32,11 +32,11 @@
 </td></tr></table>
 
 <div id="main">
-  <form class="post-form" method="post" action="/api/post">
+  <form class="post-form" method="post" action="/api/session/post">
     <input type="text" name="body" size="30"></input>
     <input type="submit" value="Post"></input>
   </form>
-  <form class="logout-form" method="post" action="/api/logout">
+  <form class="logout-form" method="post" action="/api/session/logout">
     <input type="submit" value="Logout"></input>
   </form>
   <div id="sessions"></div>
