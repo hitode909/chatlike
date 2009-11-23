@@ -7,7 +7,6 @@ module Api
       rescue(SessionManager::DupricateUser) => e
         return raised_error(e)
       end
-      session.post_system_message_to_channel("registered")
       {:session => session.to_hash}
     end
 
@@ -18,13 +17,11 @@ module Api
       rescue(SessionManager::UserNotFound) => e
         return raised_error(e)
       end
-      session.post_system_message_to_channel("logged in")
       {:session => session.to_hash}
     end
 
     def logout
       return unless request.post? and check_session
-      @session.post_system_message_to_channel("logged out")
       @session.kill
       {:session => @session.to_hash}
     rescue => e
@@ -92,7 +89,6 @@ module Api
     def gc_invalid_sessions
       if @session.channel
         @session.channel.refresh.invalid_sessions.each { |s|
-          s.post_system_message_to_channel("timeout")
           s.kill
         }
       end
