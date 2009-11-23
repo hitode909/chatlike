@@ -1,4 +1,7 @@
 module Vcs
+  INNER_ROOT = "./svn/"
+  REPOSITORY_ROOT = 'svn://localhost/'
+  WEB_ROOT = 'http://localhost:7000/'
   class Repository < Sequel::Model
     set_schema do
       primary_key :id
@@ -187,7 +190,4 @@ module Vcs
     end
   end
 
-  INNER_ROOT = "./svn/"
-  REPOSITORY_ROOT = 'svn://localhost/'
-  WEB_ROOT = 'http://localhost:7000/'
 end
