@@ -187,7 +187,7 @@ $(function() {
       });
 
       $("#repository-action .fork").click(function() {
-                $(this).text("Fork (not implemented)");
+          $.post('/api/repository/fork', {repository: $.repository.path});
       });
 
 });

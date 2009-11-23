@@ -28,8 +28,16 @@ describe Vcs do
     @hello.path.should == "user_a/hello_world"
   end
 
-  it 'has global path' do
-    @hello.global_path.should == "./svn/user_a/hello_world"
+  it 'has inner path' do
+    @hello.inner_path.should == "./svn/user_a/hello_world"
+  end
+
+  it 'has repository path' do
+    @hello.repository_path.should == "svn://localhost/user_a/hello_world"
+  end
+
+  it 'has web path' do
+    @hello.web_path.should == "http://localhost:7000/repository/user_a/hello_world"
   end
 
   it 'may has parent' do

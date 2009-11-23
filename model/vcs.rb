@@ -31,7 +31,7 @@ module Vcs
       @entities = []
       root = nil
       last = nil
-      `svnlook tree #{self.global_path}`.split("\n").each{ |path|
+      `svnlook tree #{self.inner_path}`.split("\n").each{ |path|
         unless last
           root = Vcs::Repository::Directory.new('/')
           root.repository = self
@@ -55,14 +55,23 @@ module Vcs
       @root = nil
     end
 
-    def global_path
-      ::File.join(Vcs::GLOBAL_PATH, self.path)
+    def inner_path
+      ::File.join(Vcs::INNER_ROOT, self.path)
+    end
+
+    def web_path
+      Vcs::WEB_ROOT + 'repository/' + self.path
+    end
+
+    def repository_path
+      Vcs::REPOSITORY_ROOT + self.path
     end
 
     def to_hash
       {
         :path => self.path,
-        :global_path => 'svn://localhost/' + self.path,
+        :repository_path => self.repository_path,
+        :web_path => self.web_path,
         :name => self.name,
         :author => self.author.name,
         :created_at => self.created_at
@@ -77,10 +86,10 @@ module Vcs
         :name => self.name,
         :parent => self
         )
-      puts "mkdir -p #{new.global_path}"
-      system "mkdir -p #{new.global_path}"
-      puts "cp -r #{self.global_path} #{new.global_path}"
-      system "cp -r #{self.global_path} #{new.global_path}"
+      puts "mkdir -p #{new.inner_path}"
+      system "mkdir -p #{new.inner_path}"
+      puts "cp -r #{self.inner_path} #{new.inner_path}"
+      system "cp -r #{self.inner_path} #{new.inner_path}"
       new
     end
   end
@@ -143,7 +152,7 @@ module Vcs
   class Repository::File < Repository::Entity
 
     def read
-      `svnlook cat #{self.repository.global_path} #{path}`
+      `svnlook cat #{self.repository.inner_path} #{path}`
     end
 
     def file?
@@ -155,5 +164,7 @@ module Vcs
     end
   end
 
-  GLOBAL_PATH = "./svn/"
+  INNER_ROOT = "./svn/"
+  REPOSITORY_ROOT = 'svn://localhost/'
+  WEB_ROOT = 'http://localhost:7000/'
 end
