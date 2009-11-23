@@ -4,6 +4,7 @@ require 'timeout'
 class MainController < Controller
   def index
     @title = "Index"
+    @repositories = Vcs::Repository.all
   end
 
   def register

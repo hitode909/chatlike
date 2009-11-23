@@ -6,12 +6,11 @@
     <title>#{@title}</title>
     <div id="user-session">
       <?r if @session ?>
-      <div class="logout">
-        <form action="/logout" method="post">
-          <input type="hidden" name="redirect" value="#{request.env["REQUEST_URI"]}" />
-          <input type="submit" value="Logout" />
-        </form>
-      </div>
+      Hi, #{h @session.user.name}.
+      <form action="/logout" method="post">
+        <input type="hidden" name="redirect" value="#{request.env["REQUEST_URI"]}" />
+        <input type="submit" value="Logout" />
+      </form>
       <?r else ?>
       #{ anchor("Login", "/login", {:redirect => request.env["REQUEST_URI"] })}
       #{ anchor("Register", "/register", {:redirect => request.env["REQUEST_URI"] })}
