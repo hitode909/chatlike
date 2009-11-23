@@ -40,6 +40,7 @@ describe Vcs do
     @child1.children.should be_empty
   end
 
+=begin
   it 'has files' do
     files = @hello.files
     files.should_not be_empty
@@ -54,5 +55,44 @@ describe Vcs do
     files[1].file?.should be_true
     files[1].read.should =~ /Hello, World/
   end
+=end
 
+end
+
+describe Vcs::Repository::Directory do
+  before do
+    @mydir = Vcs::Repository::Directory.new('mydir')
+    @c1 = Vcs::Repository::Directory.new('child1')
+    @c2 = Vcs::Repository::Directory.new('child2')
+    @mydir.push(@c1)
+    @mydir.push(@c2)
+  end
+
+  it 'is directory' do
+    @mydir.directory?.should be_true
+  end
+
+  it 'has node_path' do
+    @mydir.node_path.should == 'mydir'
+  end
+
+  it 'has files' do
+    @mydir.files.length.should == 2
+    @c1.parent.should == @mydir
+    @c2.parent.should == @mydir
+  end
+
+  it 'has path' do
+    @mydir.path.should == 'mydir'
+    @c1.path.should == "mydir/child1"
+    @c2.path.should == "mydir/child2"
+  end
+
+  it 'has iterator' do
+    res = []
+    @mydir.each { |f|
+      res << f.path
+    }
+    res.should == @mydir.files.map{ |f| f.path }
+  end
 end

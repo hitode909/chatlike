@@ -17,6 +17,7 @@ module Vcs
     end
 
     def files
+      # directory will apear as indent
       `svnlook tree #{self.global_path}`.split("\n").map{ |path|
         Repository::File.new(self, path.strip)
       }
@@ -27,23 +28,62 @@ module Vcs
     end
   end
 
-  class Repository::File
-    attr_reader :repository, :path
-    def initialize(repository, path)
-      @repository, @path = repository, path
+  class Repository::Entity
+    attr_accessor :repository, :parent, :node_path
+    def initialize(node_path)
+      @node_path = node_path
+    end
+
+    def path
+      self.parent ? ::File.join(self.parent.path , self.node_path) : self.node_path
+    end
+  end
+
+  class Repository::Directory < Repository::Entity
+    attr_accessor :files
+
+    def initialize(n)
+      @files = []
+      super(n)
     end
 
     def read
-      raise Errno::EISDIR, self.path if self.directory?
+      raise Errno::EISDIR
+    end
+
+    def directory?
+      true
+    end
+
+     def each(&block)
+       self.files.each {|b|
+         yield(b)
+       }
+     end
+
+    def push(entity)
+      raise TypeError unless entity.kind_of? Vcs::Repository::Entity
+      self.files << entity
+      entity.parent = self
+    end
+
+    def file?
+      false
+    end
+  end
+
+  class Repository::File < Repository::Entity
+
+    def read
       `svnlook cat #{self.repository.global_path} #{path}`
     end
 
     def file?
-      not self.directory?
+      true
     end
 
     def directory?
-      !!(self.path.strip =~ /\/$/)
+      false
     end
   end
 
