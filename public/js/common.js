@@ -187,7 +187,13 @@ $(function() {
       });
 
       $("#repository-action .fork").click(function() {
-          $.post('/api/repository/fork', {repository: $.repository.path});
+          $.post('/api/repository/fork', {repository: $.repository.path}, function(res) {
+              if (res.status == 'ok') {
+                  location.replace(res.repository.web_path);
+              } else {
+                  alert(res.errors);
+              }
+          }, 'json');
       });
 
 });

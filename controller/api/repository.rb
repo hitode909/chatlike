@@ -23,6 +23,8 @@ module Api
       { :status => 'ok',
         :repository => new_repository.to_hash
       }
+    rescue => e
+      raised_error(e)
     end
 end
 end
