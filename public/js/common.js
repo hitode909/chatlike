@@ -178,4 +178,16 @@ $(function() {
           });
       });
 
+      $("#repository-action .embed").click(function() {
+          $(this).text("Embed (not implemented)");
+      });
+
+      $("#repository-action .checkout").click(function() {
+          $(this).text("Checkout (not implemented)");
+      });
+
+      $("#repository-action .fork").click(function() {
+                $(this).text("Fork (not implemented)");
+      });
+
 });
