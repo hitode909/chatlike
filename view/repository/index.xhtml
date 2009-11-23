@@ -11,8 +11,13 @@
 <h2>Tree</h2>
 <table>
   <?r @repos.entities.each{ |e| ?>
-  <tr><td><dif>#{h e.path }</div>
-<div><?r if e.file? ?><pre class="source-code" >#{h e.read }</pre><?r end ?></div>
+  <tr <?r if e.file? ?>class="togglable"<?r end ?>><td>
+      <span class="toggle-bar">#{h e.path }</span>
+      <?r if e.file? ?><div class="toggle-content"><pre class="source-code" >#{h e.read }</pre></div><?r end ?>
 </td></tr>
   <?r } ?>
 </table>
+
+<h2>Action</h2>
+<span class="action checkout">Checkout</span>
+<span class="action fork">Fork</span>

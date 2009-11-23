@@ -72,3 +72,17 @@ body {
     font-size: 80%;
     background: #fff;
 }
+
+.togglable .toggle-content {
+    display: none;
+}
+
+.togglable .toggle-bar {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.action {
+    cursor: pointer;
+    text-decoration: underline;
+}

@@ -169,3 +169,12 @@ jQuery.extend({
         getMessage();
     }
 });
+
+$(function() {
+      $(".togglable").each(function() {
+          var context = this;
+          $(".toggle-bar", context).click(function() {
+              $(".toggle-content", context).toggle();
+          });
+      });
+});
