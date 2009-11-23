@@ -4,7 +4,7 @@ require 'timeout'
 class MainController < Controller
   def index
     @title = "Index"
-    @repositories = Vcs::Repository.all
+    @repositories = Vcs::Repository.order(:created_at.desc).limit(10).all
   end
 
   def register
