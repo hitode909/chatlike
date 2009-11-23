@@ -14,6 +14,8 @@ module Vcs
     create_table unless table_exists?
     def before_create
       self.created_at = Time.now
+      user = SessionManager::User.find(:id => self.author_id)
+      self.path = user.name + "/" + self.name
     end
 
     def entities

@@ -1,14 +1,14 @@
 hello_world:
-  path: hello_world
-  name: Hello, World
+  path: a/hello_world
+  name: hello_world
   author: a
 hello_world_child1:
-  path: hello_world_child1
-  name: Hello, World
-  author: a
+  path: b/hello_world_child1
+  name: hello_world
+  author: b
   parent: hello_world
 hello_world_child2:
-  path: hello_world_child2
-  name: Hello, World
-  author: a
+  path: c/hello_world_child2
+  name: hello_world
+  author: c
   parent: hello_world

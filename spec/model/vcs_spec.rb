@@ -5,6 +5,8 @@ require File.dirname(__FILE__) + '/../model_helper'
 describe Vcs do
   before do
      @user_a = load("session_manager/user__a")
+     @user_b = load("session_manager/user__b")
+     @user_c = load("session_manager/user__c")
      @hello = load("vcs/repository__hello_world")
      @child1 = load("vcs/repository__hello_world_child1")
      @child2 = load("vcs/repository__hello_world_child2")
@@ -19,15 +21,15 @@ describe Vcs do
   end
 
   it 'has name' do
-    @hello.name.should == "Hello, World"
+    @hello.name.should == "hello_world"
   end
 
   it 'has path' do
-    @hello.path.should == "hello_world"
+    @hello.path.should == "user_a/hello_world"
   end
 
   it 'has global path' do
-    @hello.global_path.should == "./svn/hello_world"
+    @hello.global_path.should == "./svn/user_a/hello_world"
   end
 
   it 'may has parent' do
