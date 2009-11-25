@@ -21,6 +21,10 @@ module Vcs
       self.path = user.name + "/" + self.name
     end
 
+    def before_destroy
+      system "rm -rf #{self.inner_path}"
+    end
+
     def entities
       unless @root
         self.root

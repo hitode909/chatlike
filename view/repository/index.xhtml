@@ -12,7 +12,7 @@
 <span class="action embed">Embed</span>
 <?r if @session ?><span class="action checkout">Checkout</span><?r end ?>
 <?r if @session and not @session.has_repository?(@repos) ?><span class="action fork">Fork</span><?r end ?>
-</div>
+<?r if @session and @repos.author == @session.user ?><span class="action delete">Delete</span><?r end ?></div>
 
 <h2>Tree</h2>
 <table>

@@ -26,5 +26,22 @@ module Api
     rescue => e
       raised_error(e)
     end
-end
+
+    def delete
+      return unless request.post? and check_session and check_repository(request[:repository])
+      raise "NotYourRepository" unless @repository.author == @session.user
+      new_repository = @repository.destroy
+      @session.post_json_message({
+          :type => 'delete',
+          :repository => new_repository.to_hash
+        },
+        :receiver => @session.user
+        )
+      { :status => 'ok',
+        :repository => new_repository.to_hash
+      }
+     rescue => e
+       raised_error(e)
+    end
+  end
 end

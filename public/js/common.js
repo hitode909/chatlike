@@ -196,4 +196,14 @@ $(function() {
           }, 'json');
       });
 
+      $("#repository-action .delete").click(function() {
+          $.post('/api/repository/delete', {repository: $.repository.path}, function(res) {
+              if (res.status == 'ok') {
+                  location.replace('/');
+              } else {
+                  alert(res.errors);
+              }
+          }, 'json');
+      });
+
 });
