@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module Vcs
   INNER_ROOT = "./svn/"
   REPOSITORY_ROOT = 'svn://localhost/'
@@ -30,6 +31,10 @@ module Vcs
         self.root
       end
       @entities
+    end
+
+    def file_at(path)
+      self.entities.select{ |f| f.path == path}.first
     end
 
     # XXX: need more test
@@ -134,6 +139,23 @@ module Vcs
     def path
       self.parent ? ::File.join(self.parent.path , self.node_path) : self.node_path
     end
+
+    def file_at(path)
+      raise 'should implement'
+    end
+
+    def web_path
+      self.repository.web_path + self.path
+    end
+
+    def to_hash
+      {
+        :web_path => self.web_path,
+        :path => self.path,
+        :name => self.node_path,
+        :repository => self.repository.to_hash,
+      }
+    end
   end
 
   class Repository::Directory < Repository::Entity
@@ -177,6 +199,13 @@ module Vcs
     def method_missing(name, *args)
       @files.__send__(name, *args)
     end
+
+    def to_hash
+      super.update(
+        :type => 'directory',
+        :files => self.files.map{ |f| f.path }
+        )
+    end
   end
 
   class Repository::File < Repository::Entity
@@ -191,6 +220,13 @@ module Vcs
 
     def directory?
       false
+    end
+
+    def to_hash
+      super.update(
+        :type => 'file',
+        :content => self.read  # XXX: 日本語，改行
+        )
     end
   end
 

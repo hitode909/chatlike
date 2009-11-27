@@ -40,8 +40,25 @@ module Api
       { :status => 'ok',
         :repository => new_repository.to_hash
       }
-     rescue => e
-       raised_error(e)
+    rescue => e
+      raised_error(e)
     end
+
+    def entity
+      check_repository(request[:repository])
+      check_request('entity')
+      @entity = @repository.file_at(request[:entity])
+      return {
+        :status => 'ng',
+        :errors => ['EntityNotFound'],
+      } unless @entity
+      return {
+        :status => 'ok',
+        :entity => @entity.to_hash
+      }
+    rescue => e
+      raised_error(e)
+    end
+
   end
 end
