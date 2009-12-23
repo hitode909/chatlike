@@ -167,6 +167,12 @@ jQuery.extend({
             });
         };
         getMessage();
+    },
+    embedFile: function(path) {
+        var to = $("script:last");
+        $.get("/repository/embed/" + path, function(data) {
+            to.replaceWith(data);
+        });
     }
 });
 

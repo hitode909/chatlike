@@ -148,6 +148,10 @@ module Vcs
       self.repository.web_path + self.path
     end
 
+    def path_from_root
+      self.repository.path + self.path
+    end
+
     def to_hash
       {
         :web_path => self.web_path,

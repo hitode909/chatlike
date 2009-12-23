@@ -102,3 +102,7 @@ body {
     margin-left: 0.5em;
     margin-right: 0em;
 }
+.file {
+    border: dashed 1px;
+    padding: 3px;
+}
