@@ -4,6 +4,7 @@
   <dl>
     <?r if @repos.parent ?><dt>parent</dt><dd><a href="#{h @repos.parent.web_path}">#{h @repos.parent.path}</a></dd><?r end ?>
     <dt>created_at</dt><dd>#{h @repos.created_at}</dd>
+    <dt>checkout</dt><dd><input size="40" type="text" value="svn checkout #{ h @repos.repository_path }" /></dd>
   </dl>
 </div>
 
